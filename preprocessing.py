@@ -72,17 +72,32 @@ img = (copy - min_) / (max_ - min_)
 # Add sliders for thresholding
 cv_img = (img * 255).astype(np.uint8)
 cv2.namedWindow('thresh')
+cv2.namedWindow('img')
 
 # create trackbars for color change
 cv2.createTrackbar('thresh', 'thresh', 50, 255, lambda x: None)
+
+
+# mouse callback function
+def draw_circle(event, x, y, flags, param):
+    if event == cv2.EVENT_LBUTTONDBLCLK:
+        cv2.circle(cv_img, (x, y), 5, (255, 0, 0), -1)
+
+cv2.setMouseCallback('img', draw_circle)
+
 
 while(1):
     k = cv2.waitKey(1) & 0xFF
     if k == 27:
         break
 
+    # Create a black image, a window and bind the function to window
+    img = np.zeros((512, 512, 3), np.uint8)
+
     # get current positions of four trackbars
     thresholdValue = cv2.getTrackbarPos("thresh", "thresh")
+
+    # Thresholding techniques
     ret, th1 = cv2.threshold(cv_img, thresholdValue, 255, cv2.THRESH_BINARY)
 
     # Canny from threshold
@@ -95,10 +110,6 @@ while(1):
 
 
 cv2.destroyAllWindows()
-
-#
-
-
 
 # img = (img * 255).astype(np.uint8)
 # label = (label * 255).astype(np.uint8)
