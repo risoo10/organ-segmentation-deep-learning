@@ -1,5 +1,7 @@
 # Segmentácia orgánov z MRI, CT
 
+![Liver segmentation: CT image, ground truth](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/raw/master/plots/liver.png)
+
 ## Segmentácia orgánov klasickými metódami
 Operácie:
  - Filtering - Median, Sobel

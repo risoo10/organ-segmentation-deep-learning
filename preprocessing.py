@@ -61,6 +61,14 @@ img = (copy - min_) / (max_ - min_)
 # label[label == 0] = np.nan
 # label = np.flip(np.rot90(np.rot90(np.rot90(label))), axis=0)
 
+# Plot images
+# fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(3, 5))
+# axes[0].set_title("Data")
+# axes[0].imshow(img, cmap="bone")
+# axes[1].set_title("Label")
+# axes[1].imshow(label, cmap="bone")
+# plt.show()
+
 # Add sliders for thresholding
 cv_img = (img * 255).astype(np.uint8)
 cv2.namedWindow('thresh')
@@ -89,9 +97,7 @@ while(1):
 cv2.destroyAllWindows()
 
 #
-# plt.imshow(img, cmap="bone")
-# plt.imshow(label, alpha=.25, cmap="spring")
-# plt.show()
+
 
 
 # img = (img * 255).astype(np.uint8)
