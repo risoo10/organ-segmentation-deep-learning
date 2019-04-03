@@ -5,7 +5,7 @@ from pydicom.data import get_testdata_files
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-import cv2 as cv2
+import cv2
 
 LIVER_DIR = 'C:\RISKO\SKOLA\Dimplomka\Challanges\CHAOS\Data\CT_data_batch - COMBINED 1 and 2\CT_data_batch1'
 PANCREAS_DIR = './data/liver/6'
@@ -35,6 +35,7 @@ if is_nibabel:
 
 else:
     label = cv2.imread(os.path.join(PANCREAS_DIR, label_file))
+    label = cv2.cvtColor(label, cv2.COLOR_BGR2GRAY)
 
 # Convert to Hounsfield units (HU)
 intercept = ds.RescaleIntercept
@@ -71,42 +72,94 @@ img = (copy - min_) / (max_ - min_)
 
 # Add sliders for thresholding
 cv_img = (img * 255).astype(np.uint8)
-cv2.namedWindow('thresh')
+cv_img2 = cv_img.copy()
 cv2.namedWindow('img')
 
 # create trackbars for color change
-cv2.createTrackbar('thresh', 'thresh', 50, 255, lambda x: None)
+# cv2.createTrackbar('thresh', 'thresh', 50, 255, lambda x: None)
 
 
-# mouse callback function
-def draw_circle(event, x, y, flags, param):
-    if event == cv2.EVENT_LBUTTONDBLCLK:
-        cv2.circle(cv_img, (x, y), 5, (255, 0, 0), -1)
+# Interaction fro grab cut
+mask = np.ones((COLUMS, ROWS), np.uint8) * cv2.GC_PR_BGD # Grey
+rect = (0,0,COLUMS,ROWS)
+drawing = False
+mode = None
+color_img = cv2.cvtColor(cv_img, cv2.COLOR_GRAY2BGR)
 
-cv2.setMouseCallback('img', draw_circle)
 
+def draw_mask(event, x, y, flags, param):
+    global mask, drawing, ix, iy, mode
+    if event == cv2.EVENT_LBUTTONDOWN:
+        drawing = True
+        mode = 'FG'
+
+    elif event == cv2.EVENT_LBUTTONUP:
+        drawing = False
+        mode = None
+
+    elif event == cv2.EVENT_RBUTTONDOWN:
+        drawing = True
+        mode = 'BG'
+
+    elif event == cv2.EVENT_RBUTTONUP:
+        drawing = False
+        mode = None
+
+    if event == cv2.EVENT_MOUSEMOVE:
+        if drawing:
+            if mode == 'BG':
+                cv2.circle(mask, (x, y), 5, 0, -1)
+                cv2.circle(cv_img2, (x, y), 5, 0, -1)
+            elif mode == 'FG':
+                cv2.circle(mask, (x, y), 5, 1, -1)
+                cv2.circle(cv_img2, (x, y), 5, 255, -1)
+
+
+def redraw_grab_cut(gc_img):
+    global temp1, temp2, mask, label
+    bgdmodel = np.zeros((1, 65), np.float64)
+    fgdmodel = np.zeros((1, 65), np.float64)
+    mask, _, __ = cv2.grabCut(gc_img, mask, rect, bgdmodel, fgdmodel, 5, cv2.GC_INIT_WITH_MASK)
+    gp_plot = np.where((mask == 0) | (mask == 2), 0, 255).astype(np.uint8)
+    print('[DICE]: score' + str(dice_score(gp_plot, label, 255)))
+    cv2.imshow('grab-cut', gp_plot)
+
+
+def dice_score(X, Y, k):
+    X = X.copy()
+    Y = Y.copy()
+    Y[Y == k] = 1
+    X[X == k] = 1
+
+    return np.sum(X[Y == 1]) * 2.0 / (np.sum(X) + np.sum(Y))
+
+cv2.setMouseCallback('img', draw_mask)
 
 while(1):
     k = cv2.waitKey(1) & 0xFF
     if k == 27:
         break
+    elif k == ord('d') or k == ord('D'):
+        redraw_grab_cut(color_img)
 
     # Create a black image, a window and bind the function to window
     img = np.zeros((512, 512, 3), np.uint8)
 
     # get current positions of four trackbars
-    thresholdValue = cv2.getTrackbarPos("thresh", "thresh")
+    # thresholdValue = cv2.getTrackbarPos("thresh", "thresh")
 
     # Thresholding techniques
-    ret, th1 = cv2.threshold(cv_img, thresholdValue, 255, cv2.THRESH_BINARY)
+    # ret, th1 = cv2.threshold(cv_img, thresholdValue, 255, cv2.THRESH_BINARY)
 
     # Canny from threshold
-    edges = cv2.Canny(th1, 100, 200)
+    # edges = cv2.Canny(th1, 100, 200)
 
-    cv2.imshow('thresh', th1)
-    cv2.imshow('canny', edges)
-    cv2.imshow('img', cv_img)
+    # cv2.imshow('thresh', th1)
+    cv2.imshow('img', cv_img2)
     cv2.imshow('label', label)
+    mask2 = np.where((mask == 1) + (mask == 3), 255, 0).astype('uint8')
+    output = cv2.bitwise_and(cv_img, cv_img, mask=mask2)
+    cv2.imshow('output', output)
 
 
 cv2.destroyAllWindows()
