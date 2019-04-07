@@ -4,7 +4,6 @@
 ![Liver segmentation: CT image, ground truth](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/raw/master/plots/liver.png)
 
 ### Segmentácia pankreasu
-![PancreasA: CT,](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/raw/master/plots/0002.gif)
 ![PancreasB: CT,](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/raw/master/plots/0068.gif)
 
 ## Segmentácia orgánov klasickými metódami
