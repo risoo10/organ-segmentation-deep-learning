@@ -1,6 +1,17 @@
 import cv2.cv2 as cv2
 import numpy as np
+import matplotlib.pyplot as plt
 import os
+
+
+def plot_slice(x, y):
+  figure = plt.figure(figsize=(20, 20))
+  plt.subplot(1, 2, 1)
+  plt.imshow(np.nan_to_num(x), cmap="bone")
+  plt.subplot(1, 2, 2)
+  plt.imshow(np.nan_to_num(y), cmap="bone")
+  plt.show()
+
 
 
 def write_mask_contour(img, label):
