@@ -12,14 +12,15 @@ from albumentations import (
     Compose, HorizontalFlip, VerticalFlip, ShiftScaleRotate
 )
 from keras.callbacks import TensorBoard
+from utils import *
 
 COLUMNS = 512
 ROWS = 512
 MODEL = 'unet-REG-AUG'
-main_dir = ".."
+main_dir = "."
 
 ## Open HDF FILE in READ mode
-train_file = tables.open_file(f'../CT-train.h5', mode="r")
+train_file = tables.open_file(f'./CT-train.h5', mode="r")
 print(train_file)
 
 x_train = train_file.get_node('/x')
@@ -31,7 +32,6 @@ TRAIN_AUGMENT = Compose([
     # VerticalFlip(p=0.5),
     ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=8, border_mode=cv2.BORDER_CONSTANT, p=0.8),
 ])
-
 
 def generator(X_data, y_data, batch_size, indices, augmentation=None):
     indx = indices
@@ -60,7 +60,7 @@ def generator(X_data, y_data, batch_size, indices, augmentation=None):
         counter += 1
         shape = X_batch.shape
         #     print('Batch X, y:', X_batch.shape, y_batch.shape)
-        yield X_batch.reshape((-1, shape[1], shape[2], 1)), y_batch.reshape((-1, shape[1], shape[2], 1))
+        yield X_batch.reshape((-1, shape[1], shape[2], 1)).astype(np.float32), y_batch.reshape((-1, shape[1], shape[2], 1)).astype(np.float32)
 
         # restart counter to yeild data in the next epoch as well
         if counter >= number_of_batches:
@@ -77,6 +77,31 @@ split = 2302
 train_ind = indices[:split]
 eval_ind = indices[split:]
 
+
+## TEST GENERATOR
+# train_gen = generator(x_train, y_train, 8, train_ind)
+# x, y = next(train_gen)
+# print('TEST GEN x:', x.shape, 'y:', y.shape)
+
+
+## TEST LOSS
+x = np.array([
+    [0, 1, 1, 0],
+    [0, 1, 1, 0]
+])
+
+y = np.array([
+    [0, 1, 1, 0],
+    [0, 1, 1, 0]
+])
+
+loss = dice_coef_loss(x.astype(np.float32), y.astype(np.float32))
+assert K.get_value(loss) == 0.0
+
+## Plot slices
+# index = 2370
+# plot_slice(x_train[index].reshape((ROWS, COLUMNS)), y_train[index].reshape((ROWS, COLUMNS)))
+
 print("Train IND (example):", train_ind[:10], ', shape:', train_ind.shape)
 print("Validation IND (example):", eval_ind[:10], ', shape:', eval_ind.shape)
 
@@ -89,7 +114,7 @@ model_checkpoint = ModelCheckpoint(f'{main_dir}/models/checkpoint/{MODEL}.hdf5',
 tbCallBack = TensorBoard(log_dir=f'{main_dir}/logs', histogram_freq=0, write_graph=True, write_images=True)
 
 epochs = 50
-batch_size = 12
+batch_size = 6
 
 # No augmentation
 train_gen = generator(x_train, y_train, batch_size, train_ind)
