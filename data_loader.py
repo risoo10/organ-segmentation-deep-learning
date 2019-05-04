@@ -2,6 +2,8 @@ import os
 import numpy as np
 import pydicom
 import SimpleITK as sitk
+from registration import *
+from tqdm import tqdm
 
 
 class DataEntry:
@@ -66,11 +68,18 @@ class LiverDataset():
         self.images = None
         self.labels = None
         self.z_positions = None
+        self.registration = RigidRegistration(source=None, default_pixel_value=0)
+        self.registration_source = None
+
+    def set_source(self, source):
+        self.registration_source = source
+        self.registration.set_source(source)
 
     def preprocess(self, ds):
         # Load slice index from Dicom
-        slice_location = ds.data_element("SliceLocation").value
-        print(f'Slice location: {slice_location}')
+        slice_orientation = ds.data_element("ImageOrientationPatient").value
+        slice_location = ds.data_element("ImagePositionPatient").value
+        # print(f'Slice position: {slice_location}, orientation: {slice_orientation}, device ser.n.: {ds.data_element("PatientPosition").value}')
         img = normalize_CT(ds)
         return img, slice_location
 
@@ -87,12 +96,12 @@ class LiverDataset():
         assert len(label_files) == len(image_files)
         labels = np.zeros((len(label_files), self.width, self.height))
         images = np.zeros((len(image_files), self.width, self.height))
-        z_positions = np.zeros((len(image_files), len(label_files)))
+        z_positions = np.zeros((len(image_files)))
         for index, (image_file, label_file) in enumerate(zip(image_files, label_files)):
 
             # Load and preprocess images
             ds = pydicom.dcmread(os.path.join(image_path, image_file))
-            image = self.preprocess(ds)
+            image, slice_location = self.preprocess(ds)
 
             # Load and preprocess labels
             path = os.path.join(label_path, label_file)
@@ -102,16 +111,45 @@ class LiverDataset():
 
             images[index] = image
             labels[index] = label
+            # z_positions[index] = slice_location
 
-        print(f'Finished: images {images.shape}, labels {labels.shape}')
-        return images, labels,
+        if self.registration_source is not None:
+            # Apply Rigid tranfromation
+            print('Applying rigid registration ...')
+            self.registration.fit_transform(images[int(images.shape[0] / 2)])
+            images = np.array([self.registration.transform_single(img) for img in tqdm(images)])
+            labels = np.array([self.registration.transform_single(lbl) for lbl in tqdm(labels)])
 
-    def load(self):
+        print(f'Finished: images {images.shape}, labels {labels.shape}, slice_coordinates min:{np.min(z_positions)}, max: {np.max(z_positions)}')
+        return images, labels, z_positions
+
+    def load_train(self):
         print(f'Loading Pancreas dataset (ALL) ....')
+
+        # Load and set registration SOURCE
+        images, labels, slice_coordinates = self.load_by_id('16')
+        source = images[int(images.shape[0] / 2)]
+        self.set_source(source)
+
         patient_ids = os.listdir(self.LIVER_DIR)
-        images = []
+        print(patient_ids)
+        # patient_ids = os.listdir(self.LIVER_DIR)[:2]  # EXAMPLE SIZE
+        x_train = []
+        y_train = []
+
+        sum = 0
         for index, patient_id in enumerate(patient_ids):
-            image, label = self.load_by_id(patient_id)
+            print(index, 'of', len(patient_ids))
+            images, labels, _ = self.load_by_id(patient_id)
+            x_train.append(images)
+            y_train.append(labels)
+            sum += images.shape[0]
+            print(patient_id, ' - SUM:', sum)
+
+            # patient_data[patient_id]['images'] = images
+            # patient_data[patient_id]['labels'] = labels
+
+        return np.concatenate(x_train), np.concatenate(y_train)
 
 
 def normalize_CT(dicom_data):
