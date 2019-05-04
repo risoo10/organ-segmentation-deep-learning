@@ -80,6 +80,6 @@ def u_net(input_shape):
 
     model = Model(inputs=inputs, outputs=conv10)
 
-    model.compile(optimizer=Adam(lr=1e-6), loss="mse", metrics=['accuracy'])
+    model.compile(optimizer=Adam(lr=1e-4), loss="binary_crossentropy", metrics=['accuracy'])
 
     return model

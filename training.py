@@ -1,6 +1,7 @@
 import os
 import random
 # import pydicom
+import tensorflow
 from model import *
 import numpy as np
 import cv2
@@ -114,7 +115,7 @@ model_checkpoint = ModelCheckpoint(f'{main_dir}/models/checkpoint/{MODEL}.hdf5',
 tbCallBack = TensorBoard(log_dir=f'{main_dir}/logs', histogram_freq=0, write_graph=True, write_images=True)
 
 epochs = 50
-batch_size = 6
+batch_size = 2
 
 # No augmentation
 train_gen = generator(x_train, y_train, batch_size, train_ind)
