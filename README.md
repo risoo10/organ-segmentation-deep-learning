@@ -30,7 +30,7 @@ We used interactive method of selecting liver - foreground and background parts 
 #### Rigid Registration
 We applied Rigid Regsitration technique to eliminate differences between two patient's angles and  scaling and centering differences. Registration used Stochastic Gradient Descent optimization of the applied transformation using operations such as rotation, semantic scaling and shifting. We provided method with reference image and target image to apply registration. Example can be seen on Figure 2.
 
-![Figure 2.: Rigid Registration](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/blob/master/plots/Patient%20Variance%20Registration%20(RIGID).png?raw=true)
+![Figure 2.: Rigid Registration](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/blob/master/plots/Rigid%20Registration.png?raw=true)
 
 #### Data Augmentation
 We used data augmentation approaches to add variance to training dataset and to prevent overfitting of the network and lead to better generalization of the algorithm. We only used subtle augmentations using random rotation, semantic scaling and shifting operation with probability of 0.8. 
