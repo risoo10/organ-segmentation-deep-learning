@@ -7,7 +7,6 @@
 *Date:* 12. 5. 2019
 
 ## Dataset
-DATASET 
 For this segmentation task we used radiological imaging dataset published in **CHAOS Open Grand Challenge** in 2018. Data were obtained from 40 healthy patients using Computed Tomography and liver was manually annotated by expert radiologist for each slice. Image sets were not registered.
 
 ## Evaluation
@@ -42,10 +41,11 @@ We trained this model for 50 epochs using mini batch aproach with batch size of 
 
 We evaluated model on the test set using mean and median  of the DSC, Precision and Recall metrics. Results can be seen in Table 1. Example of segementation using U-net neural network model can be seen in Figure 3. 
 
-|          |      DSC      |  Precision    |   Recall      |
+| Metrics  |      DSC      |  Precision    |   Recall      |
 |:---------|:-------------:|:-------------:|:-------------:|
 | mean     |    0.8167     |    0.7632     |    0.7566     |
 | median   |    0.9659     |    0.9476     |    0.9843     |
+
 Table 1.: Evaluation of the U-net neural network model
 
 
