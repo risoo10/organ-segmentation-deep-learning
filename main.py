@@ -4,13 +4,12 @@ from utils import *
 from thresholding import *
 from graph_cut import *
 
-# Pancreas
-# dataset = PancreasDataset()
-# images, labels = dataset.load_by_id('0002')
 
 train_sets = {}
 
-# Liver
+#######################
+# Export to Pytables
+#######################
 dataset = LiverDataset()
 x, y = dataset.load_set("train")
 print('Test:', 'x:', x.shape, 'y:', y.shape)
@@ -26,18 +25,21 @@ y_array = test_file.create_carray("/", "y", y_atom, y.shape, filters=filters)
 # Write numpy array to files
 x_array[:] = x
 y_array[:] = y
-
 test_file.close()
 
-
-
-# Liver
+#######################
+# Export to video
+#######################
 # dataset = LiverDataset()
 # # Load and set registration SOURCE
 # images, labels, slice_coordinates = dataset.load_by_id('16')
 # var_images, var_labels, var_slice_coordinates = dataset.load_by_id('23')
 # export_video(images, labels, 512, 512, 'plots/liver-slice')
 
+
+#######################
+# Thresholding
+#######################
 # thresholding = Thresholding()
 # thresholding.fit(images[50], labels[50])
 # img = images[50]
@@ -47,15 +49,16 @@ test_file.close()
 # graph_cut = GraphCut(img, label, 512, 512)
 # graph_cut.fit(img, label)
 
-
+#######################
 # REGISTRATION SHOWCASE
+#######################
 # img = images[images.shape[0] // 2]
 # var_img = var_images[var_images.shape[0] // 2]
 # registration = RigidRegistration(img, 1.0)
 # registration.set_source(img)
 # registration.fit_transform(var_img)
 # target = registration.transform_single(var_img)
-#
+
 # figure = plt.figure(figsize=(10, 15))
 # plt.subplot(1, 3, 1)
 # plt.imshow(img, cmap="bone")
@@ -66,7 +69,9 @@ test_file.close()
 # plt.show()
 
 
-
+#######################
+# Local binary patterns
+#######################
 # for img, label, slice_coord in zip(images, labels, slice_coordinates):
 #     print(f'Slice position: {slice_coord}')
 #     transform = LocalBinaryPatterns()

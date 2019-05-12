@@ -5,12 +5,6 @@ import matplotlib.pyplot as plt
 
 import sys
 
-# Liver
-# dataset = LiverDataset()
-# fixed_images, fixed_labels, _ = dataset.load_by_id('16')
-# moving_images, moving_labels, slice_coordinates = dataset.load_by_id('23')
-# images, labels, slice_coordinates = dataset.load_by_id('14')
-# images, labels, slice_coordinates = dataset.load_by_id('18')
 
 class RigidRegistration():
     def __init__(self, source, default_pixel_value):
@@ -24,6 +18,9 @@ class RigidRegistration():
         self.source = source
         self.source_img = sitk.GetImageFromArray(source)
 
+    # Code was modified from external source at official page of SimpleITK library
+    # Code was introduces as sample for Rigid Transformation in jupyter notebooks at
+    # http://insightsoftwareconsortium.github.io/SimpleITK-Notebooks/
     def fit_transform(self, target):
 
         target_img = sitk.GetImageFromArray(target)

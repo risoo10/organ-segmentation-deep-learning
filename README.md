@@ -1,5 +1,11 @@
 # Liver Segmentation from Radiological Imaging (CT)
 
+*Author:* Bc. Richard Mocák
+
+*Course:* Computer Vision 
+
+*Date:* 12. 5. 2019
+
 ## Dataset
 DATASET 
 For this segmentation task we used radiological imaging dataset published in **CHAOS Open Grand Challenge** in 2018. Data were obtained from 40 healthy patients using Computed Tomography and liver was manually annotated by expert radiologist for each slice. Image sets were not registered.
@@ -43,7 +49,7 @@ We evaluated model on the test set using mean and median  of the DSC, Precision 
 Table 1.: Evaluation of the U-net neural network model
 
 
-![Figure 3.: U-net segementaion example (DSC is 0,9815)](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/blob/master/plots/Patient%20Variance%20Registration%20(RIGID).png?raw=true)
+![Figure 3.: U-net segementaion example (DSC is 0,9815)](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/blob/master/plots/u-net-segmentation-example.PNG?raw=true)
 
 
 

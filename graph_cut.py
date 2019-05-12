@@ -4,7 +4,8 @@ import cv2.cv2 as cv2
 # from metrics import dice_score
 from utils import write_mask_contour, dice_coef
 
-
+# This code was modified from the official OPENCV github page for samples
+# with source at https://github.com/opencv/opencv/blob/master/samples/python/grabcut.py
 class GraphCut:
     def __init__(self, image, label, COLUMNS, ROWS, showMask=False):
         assert image.shape == label.shape
@@ -75,17 +76,6 @@ class GraphCut:
             elif k == ord('d') or k == ord('D'):
                 self.redraw_grab_cut(color_img)
 
-            # Create a black image, a window and bind the function to window
-            # img = np.zeros((512, 512, 3), np.uint8)
-
-            # get current positions of four trackbars
-            # thresholdValue = cv2.getTrackbarPos("thresh", "thresh")
-
-            # Thresholding techniques
-            # ret, th1 = cv2.threshold(self.cv_img, thresholdValue, 255, cv2.THRESH_BINARY)
-
-            # Canny from threshold
-            # edges = cv2.Canny(th1, 100, 200)
 
             mask2 = np.where((self.mask == 1) + (self.mask == 3), 255, 0).astype('uint8')
             out = self.cv_img2.copy()
