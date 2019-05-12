@@ -1,27 +1,19 @@
-# Segmentácia orgánov z MRI, CT
+# Liver Segmentation from Radiological Imaging (CT)
 
-### Segmentácia pečene
-![Liver segmentation: CT image, ground truth](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/raw/master/plots/liver.png)
+## Dataset
+DATASET 
+For this segmentation task we used radiological imaging dataset published in **CHAOS Open Grand Challenge** in 2018. Data were obtained from 40 healthy patients using Computed Tomography and liver was manually annotated by expert radiologist for each slice.
 
-### Segmentácia pankreasu
-![PancreasB: CT,](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/raw/master/plots/0068.gif)
+## Evaluation
+We used **Dice-Sorensen Coefficient (DSC)** for evaluation of each method.  Coefficient is defined as intersection over union.   
 
-## Segmentácia orgánov klasickými metódami
-Operácie:
- - Filtering - Median, Sobel
- - Thresholding
- - Growing region
- - Graph cut
- - Automatic Graph cut
- - Watershed algorithm 
+## Segmentation Methods:
 
-## Augmentácia radiologických dát
- - Posun
- - Orezanie
- - Obrátenie
- - Rotácia
- - **Elastické deformácie**
- 
- LBP - Local Binary Patterns ?
+### 1. Thresholding
+We applied thresholding to obtain segmentation mask using Binary Thresholding and OTSU Adaptive Thresholding. We used interactive selection of the threshold value for the Binary Thresholding method. DSC evaluation of both methods was respectively DSC(*binary*) ≈ 0,4012 , DSC(*otsu*) ≈ 0,3974.
 
-pv-semestralny-projekt-streda-18-kompanek-risoo10 created by GitHub Classroom
+### 2. Graph cut
+We used interactive method of selecting liver - foreground and background parts of CT image and then we applied *Graph Cut* energy based algorithm to obtain segmentation mask. Foreground and background parts could be interatively updated to recalculate mask to obtain more precise segmentation. Results can be seen on Figure 1. 
+
+
+![Figure 1.: Graph Cut - interactive segmentation method](https://github.com/vgg-fiit/pv-semestralny-projekt-organ-segmentation-mocak/raw/master/plots/liver.png)

@@ -13,6 +13,13 @@ def plot_slice(x, y):
   plt.show()
 
 
+smooth = 0.000001
+def dice_coef(y_true, y_pred):
+    y_true_f = y_true.flatten()
+    y_pred_f = y_pred.flatten()
+    intersection = np.sum(y_true_f * y_pred_f)
+    return (2. * intersection + smooth) / (np.sum(y_true_f) + np.sum(y_pred_f) + smooth)
+
 
 def write_mask_contour(img, label):
     img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)

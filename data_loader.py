@@ -61,6 +61,8 @@ class PancreasDataset():
 class LiverDataset():
     def __init__(self):
         self.LIVER_DIR = 'C:\RISKO\SKOLA\Dimplomka\Challanges\CHAOS_Train_Sets\Train_Sets\CT'
+        self.train_dir = 'C:\RISKO\SKOLA\Dimplomka\Challanges\CHAOS_Train_Sets\Train_Sets\CT'
+        self.test_dir = 'C:\RISKO\SKOLA\Dimplomka\Challanges\CHAOS_Test_Sets\Test_Sets\CT'
         self.IMAGES_DIR = 'DICOM_anon'
         self.LABELS_DIR = 'Ground'
         self.width = 512
@@ -123,13 +125,20 @@ class LiverDataset():
         print(f'Finished: images {images.shape}, labels {labels.shape}, slice_coordinates min:{np.min(z_positions)}, max: {np.max(z_positions)}')
         return images, labels, z_positions
 
-    def load_train(self):
-        print(f'Loading Pancreas dataset (ALL) ....')
+    def load_set(self, mode):
+        print(f'Loading Pancreas dataset (ALL) ....')\
 
+        self.LIVER_DIR = self.train_dir
         # Load and set registration SOURCE
         images, labels, slice_coordinates = self.load_by_id('16')
         source = images[int(images.shape[0] / 2)]
         self.set_source(source)
+
+        if mode == 'train':
+            self.LIVER_DIR = self.train_dir
+
+        elif mode == 'test':
+            self.LIVER_DIR = self.test_dir
 
         patient_ids = os.listdir(self.LIVER_DIR)
         print(patient_ids)

@@ -1,7 +1,7 @@
 import os
 import random
 # import pydicom
-import tensorflow
+import tensorflow as tf
 from model import *
 import numpy as np
 import cv2
@@ -125,6 +125,8 @@ eval_gen = generator(x_train, y_train, batch_size, eval_ind)
 # train_gen = generator(x_train, y_train, batch_size, train_ind, augmentation=TRAIN_AUGMENT)
 # eval_gen = generator(x_train, y_train, batch_size, eval_ind, augmentation=TRAIN_AUGMENT)
 
+sess = tf.Session()
+K.set_session(sess)
 
 history = model.fit_generator(
     generator=train_gen,
@@ -137,6 +139,9 @@ history = model.fit_generator(
 
 # Save model and tensor logs
 model.save(f'{main_dir}/models/{MODEL}.hdf5')
+
+K.clear_session()
+
 
 
 

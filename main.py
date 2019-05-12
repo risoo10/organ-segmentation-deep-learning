@@ -1,5 +1,8 @@
 from data_loader import *
 import tables
+from utils import *
+from thresholding import *
+from graph_cut import *
 
 # Pancreas
 # dataset = PancreasDataset()
@@ -9,23 +12,58 @@ train_sets = {}
 
 # Liver
 dataset = LiverDataset()
-x_train, y_train = dataset.load_train()
-print('Train:', 'x:', x_train.shape, 'y:', y_train.shape)
+x, y = dataset.load_set("train")
+print('Test:', 'x:', x.shape, 'y:', y.shape)
 
 # Save to pytable
-train_file = tables.open_file("CT-train.h5", mode="w")
-x_atom = tables.Atom.from_dtype(x_train.dtype)
+test_file = tables.open_file("CT-test.h5", mode="w")
+x_atom = tables.Atom.from_dtype(x.dtype)
 filters = tables.Filters(complib='blosc', complevel=5)
-x_array = train_file.create_carray("/", "x", x_atom, x_train.shape, filters=filters)
-y_atom = tables.Atom.from_dtype(y_train.dtype)
-y_array = train_file.create_carray("/", "y", y_atom, y_train.shape, filters=filters)
+x_array = test_file.create_carray("/", "x", x_atom, x.shape, filters=filters)
+y_atom = tables.Atom.from_dtype(y.dtype)
+y_array = test_file.create_carray("/", "y", y_atom, y.shape, filters=filters)
 
 # Write numpy array to files
-x_array[:] = x_train
-y_array[:] = y_train
+x_array[:] = x
+y_array[:] = y
 
-train_file.close()
+test_file.close()
 
+
+
+# Liver
+# dataset = LiverDataset()
+# # Load and set registration SOURCE
+# images, labels, slice_coordinates = dataset.load_by_id('16')
+# var_images, var_labels, var_slice_coordinates = dataset.load_by_id('23')
+# export_video(images, labels, 512, 512, 'plots/liver-slice')
+
+# thresholding = Thresholding()
+# thresholding.fit(images[50], labels[50])
+# img = images[50]
+# label = labels[50]
+
+
+# graph_cut = GraphCut(img, label, 512, 512)
+# graph_cut.fit(img, label)
+
+
+# REGISTRATION SHOWCASE
+# img = images[images.shape[0] // 2]
+# var_img = var_images[var_images.shape[0] // 2]
+# registration = RigidRegistration(img, 1.0)
+# registration.set_source(img)
+# registration.fit_transform(var_img)
+# target = registration.transform_single(var_img)
+#
+# figure = plt.figure(figsize=(10, 15))
+# plt.subplot(1, 3, 1)
+# plt.imshow(img, cmap="bone")
+# plt.subplot(1, 3, 2)
+# plt.imshow(var_img, cmap="bone")
+# plt.subplot(1, 3, 3)
+# plt.imshow(target, cmap="bone")
+# plt.show()
 
 
 
