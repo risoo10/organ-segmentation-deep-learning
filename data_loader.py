@@ -85,6 +85,17 @@ class LiverDataset():
         img = normalize_CT(ds)
         return img, slice_location
 
+    def parse_by_id(self, PATIENT_ID):
+        print(f'Loading Liver dataset for patient: {PATIENT_ID} ....')
+
+        image_path = os.path.join(self.LIVER_DIR, PATIENT_ID, self.IMAGES_DIR)
+        image_files = os.listdir(image_path)
+
+        label_path = os.path.join(self.LIVER_DIR, PATIENT_ID, self.LABELS_DIR)
+        label_files = os.listdir(label_path)
+
+        return len(image_files)
+
     def load_by_id(self, PATIENT_ID):
         print(f'Loading Liver dataset for patient: {PATIENT_ID} ....')
 
@@ -134,13 +145,16 @@ class LiverDataset():
         source = images[int(images.shape[0] / 2)]
         self.set_source(source)
 
+        split = 0.8
+        all_patients = os.listdir(self.LIVER_DIR)
+        split_ind = int(len(all_patients) * split)
+
         if mode == 'train':
-            self.LIVER_DIR = self.train_dir
+            patient_ids = all_patients[:split_ind]
 
         elif mode == 'test':
-            self.LIVER_DIR = self.test_dir
+            patient_ids = all_patients[split_ind:]
 
-        patient_ids = os.listdir(self.LIVER_DIR)
         print(patient_ids)
         # patient_ids = os.listdir(self.LIVER_DIR)[:2]  # EXAMPLE SIZE
         x_train = []
@@ -159,6 +173,18 @@ class LiverDataset():
             # patient_data[patient_id]['labels'] = labels
 
         return np.concatenate(x_train), np.concatenate(y_train)
+
+    def parse_data(self):
+        all_patients = os.listdir(self.LIVER_DIR)
+        patient_data = []
+        for patient_id in all_patients:
+            patient_data.append({
+                "id": patient_id,
+                "slices": self.parse_by_id(patient_id)
+            })
+
+        return patient_data
+
 
 
 def normalize_CT(dicom_data):
