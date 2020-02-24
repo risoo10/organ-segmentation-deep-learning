@@ -4,10 +4,12 @@ from utils import *
 from utils import write_mask_contour
 import numpy as np
 
+# Empty function
 def nothing(x):
     pass
 
 class Thresholding:
+    # Empty init
     def __init__(self):
         pass
 
@@ -16,7 +18,6 @@ class Thresholding:
 
         cv2.createTrackbar('threshold', 'thresh', 0, 255, nothing)
         font = cv2.FONT_HERSHEY_SIMPLEX
-        i = 10
 
         while True:
             k = cv2.waitKey(1) & 0xFF

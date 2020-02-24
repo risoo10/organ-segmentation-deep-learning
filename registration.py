@@ -34,13 +34,13 @@ class RigidRegistration():
         tx = sitk.CenteredTransformInitializer(self.source_img, target_img, sitk.Similarity2DTransform())
         R.SetInitialTransform(tx)
 
-        outTx = R.Execute(self.source_img, target_img)
+        out_tx = R.Execute(self.source_img, target_img)
 
         self.resampler = sitk.ResampleImageFilter()
         self.resampler.SetReferenceImage(self.source_img)
         self.resampler.SetInterpolator(sitk.sitkLinear)
         self.resampler.SetDefaultPixelValue(self.default_value)
-        self.resampler.SetTransform(outTx)
+        self.resampler.SetTransform(out_tx)
         out = self.resampler.Execute(target_img)
 
         return sitk.GetArrayFromImage(out)

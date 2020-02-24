@@ -9,8 +9,6 @@ import pickle
 train_sets = {}
 
 
-
-
 #######################
 # Export to Pytables
 #######################

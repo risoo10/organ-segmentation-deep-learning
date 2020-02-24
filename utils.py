@@ -5,15 +5,17 @@ import os
 
 
 def plot_slice(x, y):
-  figure = plt.figure(figsize=(20, 20))
-  plt.subplot(1, 2, 1)
-  plt.imshow(np.nan_to_num(x), cmap="bone")
-  plt.subplot(1, 2, 2)
-  plt.imshow(np.nan_to_num(y), cmap="bone")
-  plt.show()
+    plt.figure(figsize=(20, 20))
+    plt.subplot(1, 2, 1)
+    plt.imshow(np.nan_to_num(x), cmap="bone")
+    plt.subplot(1, 2, 2)
+    plt.imshow(np.nan_to_num(y), cmap="bone")
+    plt.show()
 
 
 smooth = 0.000001
+
+
 def dice_coef(y_true, y_pred):
     y_true_f = y_true.flatten()
     y_pred_f = y_pred.flatten()
@@ -34,7 +36,8 @@ def write_mask_contour(img, label):
 def export_video(images, labels, width, height, filename):
     frame_width = width
     frame_height = height
-    out = cv2.VideoWriter(f'{filename}.mp4', cv2.VideoWriter_fourcc('H', '2', '6', '4'), 20, (frame_width, frame_height))
+    out = cv2.VideoWriter(f'{filename}.mp4', cv2.VideoWriter_fourcc('H', '2', '6', '4'), 20,
+                          (frame_width, frame_height))
     assert images.shape == labels.shape
     for index in range(images.shape[0]):
         slice = images[index]
@@ -52,4 +55,3 @@ def export_png(array, output_dir, filename):
         path = os.path.join(output_dir, filename, str(lbl_id)) + '.png'
         lbl_img = (array[lbl_id] * 255).astype(np.uint8)
         cv2.imwrite(path, lbl_img)
-

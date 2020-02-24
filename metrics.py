@@ -1,10 +1,10 @@
 import numpy as np
 
 
-def dice_score(X, Y, k):
-    X = X.copy()
-    Y = Y.copy()
-    Y[Y == k] = 1
-    X[X == k] = 1
+def dice_score(x, y, k):
+    x = x.copy()
+    y = y.copy()
+    y[y == k] = 1
+    x[x == k] = 1
 
-    return np.sum(X[Y == 1]) * 2.0 / (np.sum(X) + np.sum(Y))
+    return np.sum(x[y == 1]) * 2.0 / (np.sum(x) + np.sum(y))
