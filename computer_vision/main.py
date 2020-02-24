@@ -1,9 +1,6 @@
-from data_loader import *
-import tables
-from utils import *
-from thresholding import *
-from graph_cut import *
-from tqdm import tqdm
+from computer_vision.data_loader import *
+from computer_vision.thresholding import *
+from computer_vision.graph_cut import *
 import pickle
 
 train_sets = {}
@@ -16,7 +13,7 @@ dataset = LiverDataset()
 
 
 data_structure_object = dataset.parse_data()
-with open('patient_slices.pkl', 'wb') as input:
+with open('../patient_slices.pkl', 'wb') as input:
      pickle.dump(data_structure_object, input, pickle.HIGHEST_PROTOCOL)
 
 # x, y = dataset.load_set("train")

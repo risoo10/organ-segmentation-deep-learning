@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pydicom
 import SimpleITK as sitk
-from registration import *
+from computer_vision.registration import *
 from tqdm import tqdm
 
 

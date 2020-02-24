@@ -1,9 +1,6 @@
 import SimpleITK as sitk
-from data_loader import *
-import cv2.cv2 as cv2
+from computer_vision.data_loader import *
 import matplotlib.pyplot as plt
-
-import sys
 
 
 class RigidRegistration():
