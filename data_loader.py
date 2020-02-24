@@ -111,7 +111,6 @@ class LiverDataset():
         images = np.zeros((len(image_files), self.width, self.height))
         z_positions = np.zeros((len(image_files)))
         for index, (image_file, label_file) in enumerate(zip(image_files, label_files)):
-
             # Load and preprocess images
             ds = pydicom.dcmread(os.path.join(image_path, image_file))
             image, slice_location = self.preprocess(ds)
@@ -133,12 +132,12 @@ class LiverDataset():
             images = np.array([self.registration.transform_single(img) for img in tqdm(images)])
             labels = np.array([self.registration.transform_single(lbl) for lbl in tqdm(labels)])
 
-        print(f'Finished: images {images.shape}, labels {labels.shape}, slice_coordinates min:{np.min(z_positions)}, max: {np.max(z_positions)}')
+        print(
+            f'Finished: images {images.shape}, labels {labels.shape}, slice_coordinates min:{np.min(z_positions)}, max: {np.max(z_positions)}')
         return images, labels, z_positions
 
     def load_set(self, mode):
-        print(f'Loading Pancreas dataset (ALL) ....')\
-
+        print(f'Loading Pancreas dataset (ALL) ....')
         self.LIVER_DIR = self.train_dir
         # Load and set registration SOURCE
         images, labels, slice_coordinates = self.load_by_id('16')
@@ -185,6 +184,7 @@ class LiverDataset():
 
         return patient_data
 
+
 class LiverLitsDataset():
 
     def __init__(self):
@@ -202,7 +202,6 @@ class LiverLitsDataset():
 
     def load_by_id(self, PATIENT_ID):
         pass
-
 
 
 def normalize_CT(dicom_data):
