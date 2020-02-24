@@ -185,6 +185,24 @@ class LiverDataset():
 
         return patient_data
 
+class LiverLitsDataset():
+
+    def __init__(self):
+        self.train_dir = 'C:\RISKO\SKOLA\Dimplomka\Challanges\CHAOS_Train_Sets\Train_Sets\CT'
+        self.test_dir = 'C:\RISKO\SKOLA\Dimplomka\Challanges\CHAOS_Test_Sets\Test_Sets\CT'
+        self.IMAGES_DIR = 'DICOM_anon'
+        self.LABELS_DIR = 'Ground'
+        self.width = 512
+        self.height = 512
+        self.images = None
+        self.labels = None
+        self.z_positions = None
+        self.registration = RigidRegistration(source=None, default_pixel_value=0)
+        self.registration_source = None
+
+    def load_by_id(self, PATIENT_ID):
+        pass
+
 
 
 def normalize_CT(dicom_data):
