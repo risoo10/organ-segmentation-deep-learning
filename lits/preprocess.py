@@ -8,7 +8,7 @@ def load_as_npy(path):
     return nib.load(path).get_fdata()
 
 
-def load_lits_files(path):
+def load_lits_files_from(path):
     sets = os.listdir(path)
     files = []
     for folder in sets:
