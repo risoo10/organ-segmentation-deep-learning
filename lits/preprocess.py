@@ -5,7 +5,9 @@ import numpy as np
 
 
 def load_as_npy(path):
-    return nib.load(path).get_fdata()
+    data = nib.load(path).get_fdata()
+    data = np.rollaxis(data, 2, 0)
+    return data
 
 
 def load_lits_files_from(path):
@@ -30,8 +32,8 @@ def load_lits_files_from(path):
 
 def plot_slice(volume, segm, slice_index):
     print(volume.shape)
-    print('seg [min, max]', segm[:, :, slice_index].min(),
-          segm[:, :, slice_index].max())
+    print('seg [min, max]', segm[slice_index, :, :].min(),
+          segm[slice_index, :, :].max())
     plt.figure(figsize=(15, 15))
     plt.subplot('121')
     plt.title('Source')

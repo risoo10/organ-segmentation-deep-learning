@@ -221,11 +221,11 @@ def normalize_CT(dicom_data):
 
 def normalize(img):
      # Clip only HU of liver and tissues
-    img = np.clip(img, -100, 300)
+    img = np.clip(img, -150, 400)
 
     # Normalize input
     copy = img
-    min_, max_ = float(np.min(copy)), float(np.max(copy))
+    min_, max_ = -150, 400
     img = (copy - min_) / (max_ - min_)
 
     return img
