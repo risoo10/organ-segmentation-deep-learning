@@ -31,7 +31,7 @@ def load_lits_files_from(path):
 
 
 def plot_slice(volume, segm, slice_index):
-    slice = slice_index, :, :
+    slice = np.index_exp[slice_index, :, :]
     print(volume.shape)
     print('seg [min, max]', segm[slice].min(),
           segm[slice].max())
