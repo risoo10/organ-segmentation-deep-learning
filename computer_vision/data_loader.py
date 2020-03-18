@@ -216,10 +216,11 @@ def normalize_CT(dicom_data):
     img += np.int16(intercept)
     img = np.array(img, dtype=np.int16)
 
-    # Set outside-of-scan pixels to 0
-    img[img < -2000] = intercept
+    return normalize(img)
 
-    # Clip only HU of liver and tissues
+
+def normalize(img):
+     # Clip only HU of liver and tissues
     img = np.clip(img, -100, 300)
 
     # Normalize input
@@ -228,3 +229,4 @@ def normalize_CT(dicom_data):
     img = (copy - min_) / (max_ - min_)
 
     return img
+
