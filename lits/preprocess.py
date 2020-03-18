@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import os
-import nibabel as nibabel
+import nibabel as nib
 import numpy as np
 
 def load_as_npy(path):
