@@ -31,14 +31,15 @@ def load_lits_files_from(path):
 
 
 def plot_slice(volume, segm, slice_index):
+    slice = slice_index, :, :
     print(volume.shape)
-    print('seg [min, max]', segm[slice_index, :, :].min(),
-          segm[slice_index, :, :].max())
+    print('seg [min, max]', segm[slice].min(),
+          segm[slice].max())
     plt.figure(figsize=(15, 15))
     plt.subplot('121')
     plt.title('Source')
-    plt.imshow(volume[:, :, slice_index], cmap="bone",)
+    plt.imshow(volume[slice], cmap="bone",)
     plt.subplot('122')
     plt.title('Segmentation')
-    seg = segm[:, :, slice_index]
+    seg = segm[slice]
     plt.imshow(seg == 1, cmap="tab20")
