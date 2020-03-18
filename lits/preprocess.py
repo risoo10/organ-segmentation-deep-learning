@@ -3,6 +3,9 @@ import os
 import nibabel as nibabel
 import numpy as np
 
+def load_as_npy(path):
+    return nib.load(path).get_fdata()
+
 def load_lits_files(path):
   sets = os.listdir(path)
   files = []
