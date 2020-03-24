@@ -77,7 +77,7 @@ def load_target():
     x = rotate90(x, 1)
     y = rotate90(y, 1)
     print(target_ind)
-    plot_slice(x.astype(np.float32), y, target_ind)
+    plot_slice(x.astype(np.float32), y, np.index_exp[target_ind])
     return x[target_ind]
 
 

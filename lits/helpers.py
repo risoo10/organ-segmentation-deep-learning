@@ -39,16 +39,29 @@ def load_lits_files_from(path):
     return volumes, segmentations
 
 
-def plot_slice(volume, segm, slice_index):
-    slice = np.index_exp[slice_index, :, :]
+def plot_slice(volume, segm, slice, figsize=(15, 15)):
     x = volume[slice].astype(np.float32)
     y = segm[slice].astype(np.int16)
     print(volume.shape)
     print('seg [min, max]', y.min(), y.max())
-    plt.figure(figsize=(15, 15))
+    plt.figure(figsize=figsize)
     plt.subplot('121')
     plt.title('Source')
     plt.imshow(x, cmap="bone",)
     plt.subplot('122')
     plt.title('Segmentation')
     plt.imshow(y, cmap="tab20")
+
+
+def plot_patient_samples(indexes, dset, scale_factor=2, columns=8):
+    length = len(indexes)
+    rows = np.ceil(length / columns)
+    plt.figure(figsize=(columns * scale_factor, rows * scale_factor))
+    for i, index in enumerate(indexes):
+        pat_index = dset.slices[index]
+        ind = int((pat_index[0] + pat_index[1]) / 2)
+        plt.subplot(rows, columns, i + 1)
+        plt.title(f'Patient {index}')
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(dset.x[ind].astype(np.float32), cmap="bone")

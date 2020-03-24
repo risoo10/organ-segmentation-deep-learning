@@ -24,8 +24,8 @@ class LitsDataSet:
     self.y = self.file.create_carray("/", 'y', y_atom, (SAMPLES, HEIGHT, WIDTH), filters=filters)
     self.slices = self.file.create_carray('/', 'slices', slices_atom, (PATIENTS, 2), filters=filters)
 
-  def load_read(self):
-    self.file = tables.open_file(f'{drive_dir}/{self.filename}', mode="r")
+  def load(self, mode):
+    self.file = tables.open_file(f'{drive_dir}/{self.filename}', mode=mode)
     self.opened = True
     self.x = self.file.get_node('/x')
     self.y = self.file.get_node('/y')

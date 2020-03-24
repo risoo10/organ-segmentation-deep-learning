@@ -74,7 +74,7 @@ class DiceLoss(nn.Module):
 
 class WeightedDiceLoss(nn.Module):
   def __init__(self):
-    super().__init__();
+    super().__init__()
     self.diceLoss = DiceLoss()
     self.name = 'Weighted Dice'
   
@@ -89,7 +89,7 @@ class WeightedDiceLoss(nn.Module):
 
 class WeightedBceLoss(nn.Module):
   def __init__(self):
-    super().__init__();
+    super().__init__()
     self.bceLoss = nn.BCELoss()
     self.name = 'Weighted BCE'
   
