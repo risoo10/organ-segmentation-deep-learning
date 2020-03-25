@@ -18,7 +18,7 @@ class LitsDataSet:
     filters = tables.Filters(complib='blosc', complevel=5)
     x_atom = tables.Atom.from_dtype(np.dtype('float16'))
     y_atom = tables.Atom.from_dtype(np.dtype('int8'))
-    slices_atom = tables.Atom.from_dtype(np.dtype('int16'))
+    slices_atom = tables.Atom.from_dtype(np.dtype('int32'))
 
     self.x = self.file.create_carray("/", 'x', x_atom, (SAMPLES, HEIGHT, WIDTH), filters=filters)
     self.y = self.file.create_carray("/", 'y', y_atom, (SAMPLES, HEIGHT, WIDTH), filters=filters)
@@ -34,7 +34,7 @@ class LitsDataSet:
   def save(self, x, y, start, end, patient_ind):
     self.x[start:end] = x
     self.y[start:end] = y
-    self.slices[patient_ind] = np.array([start, end]).astype(np.int16)
+    self.slices[patient_ind] = np.array([start, end]).astype(np.int32)
 
   def close(self):
     self.opened = False
