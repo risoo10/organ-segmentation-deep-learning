@@ -12,7 +12,7 @@ from computer_vision.registration import RigidRegistration
 from utils.constants import *
 
 
-def preprocess_lits(vol, segs, REG_TARGET, FILENAME = 'lits-set.h5'):
+def preprocess_lits(vol, segs, rotated_ind, REG_TARGET, FILENAME = 'lits-set.h5'):
     try:
         rig_reg = RigidRegistration(REG_TARGET, 0)
         rig_reg.set_source(REG_TARGET)
@@ -43,9 +43,14 @@ def preprocess_lits(vol, segs, REG_TARGET, FILENAME = 'lits-set.h5'):
             # Convert and normalize
             y = y != 0      # ignore tumor segmentation
             y = y.astype('int8')
-            y = rotate90(y, 1)
             x = normalize(x)
-            x = rotate90(x, 1)
+
+            # Rotate
+            repetitions = 1
+            if id in rotated_ind:
+                repetitions = 3
+            y = rotate90(y, repetitions)
+            x = rotate90(x, repetitions)
 
             # Register
             x, y = register(rig_reg, x, y)
