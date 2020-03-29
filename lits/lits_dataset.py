@@ -43,9 +43,13 @@ class LitsDataSet():
         self.x = self.file.get_node('/x')
         self.y = self.file.get_node('/y')
         self.slices = self.file.get_node('/slices')
-        self.train = self.file.get_node('/train')
-        self.test = self.file.get_node('/test')
-        self.val = self.file.get_node('/val')
+
+        try:
+            self.train = self.file.get_node('/train')
+            self.test = self.file.get_node('/test')
+            self.val = self.file.get_node('/val')
+        except:
+            print('Tran, Test, Val not set')
 
     def save(self, x, y, start, end, patient_ind):
         self.x[start:end] = x
