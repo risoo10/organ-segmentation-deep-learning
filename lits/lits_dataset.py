@@ -11,6 +11,9 @@ class LitsDataSet():
         self.x = None
         self.y = None
         self.slices = None
+        self.train = None
+        self.val = None
+        self.test = None
 
     def load_write(self):
         self.file = tables.open_file(f'{drive_dir}/{self.filename}', mode="w")
@@ -28,17 +31,33 @@ class LitsDataSet():
         self.slices = self.file.create_carray(
             '/', 'slices', slices_atom, (PATIENTS, 2), filters=filters)
 
+    def write_splits(self):
+        train, test, val = self.split_test_val_train(PATIENTS)
+        self.file.create_array('/', 'train', train)
+        self.file.create_array('/', 'test', test)
+        self.file.create_array('/', 'val', val)
+
     def load(self, mode):
         self.file = tables.open_file(f'{drive_dir}/{self.filename}', mode=mode)
         self.opened = True
         self.x = self.file.get_node('/x')
         self.y = self.file.get_node('/y')
         self.slices = self.file.get_node('/slices')
+        self.train = self.file.get_node('/train')
+        self.test = self.file.get_node('/test')
+        self.val = self.file.get_node('/val')
 
     def save(self, x, y, start, end, patient_ind):
         self.x[start:end] = x
         self.y[start:end] = y
         self.slices[patient_ind] = np.array([start, end]).astype(np.int32)
+
+    def split_test_val_train(self, length):
+        indices = np.arange(0, length)
+        np.random.seed(42)
+        np.random.shuffle(indices)
+        splits = [int(length * 0.7), int(length * 0.9)]
+        return np.split(indices, splits)
 
     def close(self):
         self.opened = False
