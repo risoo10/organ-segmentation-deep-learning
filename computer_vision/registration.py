@@ -28,7 +28,8 @@ class RigidRegistration():
                                                    gradientMagnitudeTolerance=1e-8)
         R.SetOptimizerScalesFromIndexShift()
 
-        tx = sitk.CenteredTransformInitializer(self.source_img, target_img, sitk.Similarity2DTransform())
+        tx = sitk.CenteredTransformInitializer(
+            self.source_img, target_img, sitk.Similarity2DTransform())
         R.SetInitialTransform(tx)
 
         out_tx = R.Execute(self.source_img, target_img)

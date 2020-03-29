@@ -102,38 +102,6 @@ class WeightedBceLoss(nn.Module):
 
     return bce_part + weight_part
 
-class CTDataset(Dataset):
-  def __init__(self, x, y, ind, weights=True, transform=None):
-    self.x = x
-    self.y = y
-    self.ind = ind
-    self.weights = True
-    self.transform = transform
-    self.out_transform = transforms.ToTensor()
-  
-  def __len__(self,):
-    return self.ind.shape[0]
-  
-  def __getitem__(self, idx):
-    x = self.x[self.ind[idx]].astype(np.float32)
-    y = self.y[self.ind[idx]].astype(np.float32)
-    
-    if self.transform:
-      aug = self.transform(image=x, mask=y)
-      x = np.nan_to_num(aug['image'])
-      y = np.nan_to_num(aug['mask'])
-    else:
-      x = np.nan_to_num(x)
-      y = np.nan_to_num(y)
-    
-    if self.weights:
-      weight = distance_transform_weight(y).astype(np.float32)
-      weight = np.nan_to_num(weight)
-      return self.out_transform(x), self.out_transform(y), self.out_transform(weight)
-    else:
-      return self.out_transform(x), self.out_transform(y), None
-
-
 def plot_slice(x, y):
     plt.figure(figsize=(20, 20))
     plt.subplot(1, 2, 1)

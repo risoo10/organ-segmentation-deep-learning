@@ -9,7 +9,7 @@ def find_target_index(segmentation):
     first = np.argmax(organ_detected)
     last = len(organ_detected) - np.argmax(np.flip(organ_detected)) - 1
     target = int((first + last) / 2)
-    print(first, last, target)
+    print('Organ detection', first, last, target)
     return target
 
 

@@ -21,3 +21,5 @@ scikit-learn==0.20.3
 scipy==1.2.1
 SimpleITK==1.2.0
 six==1.12.0
+connected-components-3d==1.6.0
+vtkplotter==2020.2.2

@@ -70,7 +70,8 @@ class LiverDataset():
         self.images = None
         self.labels = None
         self.z_positions = None
-        self.registration = RigidRegistration(source=None, default_pixel_value=0)
+        self.registration = RigidRegistration(
+            source=None, default_pixel_value=0)
         self.registration_source = None
 
     def set_source(self, source):
@@ -129,8 +130,10 @@ class LiverDataset():
             # Apply Rigid tranfromation
             print('Applying rigid registration ...')
             self.registration.fit_transform(images[int(images.shape[0] / 2)])
-            images = np.array([self.registration.transform_single(img) for img in tqdm(images)])
-            labels = np.array([self.registration.transform_single(lbl) for lbl in tqdm(labels)])
+            images = np.array([self.registration.transform_single(img)
+                               for img in tqdm(images)])
+            labels = np.array([self.registration.transform_single(lbl)
+                               for lbl in tqdm(labels)])
 
         print(
             f'Finished: images {images.shape}, labels {labels.shape}, slice_coordinates min:{np.min(z_positions)}, max: {np.max(z_positions)}')
@@ -197,7 +200,8 @@ class LiverLitsDataset():
         self.images = None
         self.labels = None
         self.z_positions = None
-        self.registration = RigidRegistration(source=None, default_pixel_value=0)
+        self.registration = RigidRegistration(
+            source=None, default_pixel_value=0)
         self.registration_source = None
 
     def load_by_id(self, PATIENT_ID):
@@ -220,7 +224,7 @@ def normalize_CT(dicom_data):
 
 
 def normalize(img):
-     # Clip only HU of liver and tissues
+    # Clip only HU of liver and tissues
     img = np.clip(img, -150, 400)
 
     # Normalize input
@@ -229,4 +233,3 @@ def normalize(img):
     img = (copy - min_) / (max_ - min_)
 
     return img
-
