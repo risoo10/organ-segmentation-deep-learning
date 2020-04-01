@@ -17,8 +17,8 @@ class LitsSet(Dataset):
 
     def __getitem__(self, i):
         ind = self.ind_map[i]
-        x = self.dset.x[ind]
-        y = self.dset.y[ind]
+        x = self.dset.x[ind].reshape((1, ROWS, COLUMNS))
+        y = self.dset.y[ind].reshape((1, ROWS, COLUMNS))
 
         if self.weights:
             weight = distance_transform_weight(y).astype(np.float32)
