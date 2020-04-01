@@ -18,13 +18,13 @@ class LitsSet(Dataset):
 
     def __getitem__(self, i):
         ind = self.ind_map[i]
-        x = self.dset.x[ind].reshape((1, WIDTH, HEIGHT))
+        x = self.dset.x[ind].reshape((1, WIDTH, HEIGHT)).astype(np.float32)
         _y = self.dset.y[ind]
-        y = _y.reshape((1, WIDTH, HEIGHT))
+        y = _y.reshape((1, WIDTH, HEIGHT)).astype(np.float32)
 
         if self.weights:
             weight = distance_transform_weight(_y).astype(np.float32)
-            weight = np.nan_to_num(weight).reshape((1, WIDTH, HEIGHT))
+            weight = np.nan_to_num(weight).reshape((1, WIDTH, HEIGHT)).astype(np.float32)
             return self.transform(x), self.transform(y), self.transform(weight)
         else:
             return self.transform(x), self.transform(y), None
