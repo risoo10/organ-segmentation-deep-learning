@@ -41,8 +41,8 @@ class CTDataset(Dataset):
         return self.ind.shape[0]
 
     def __getitem__(self, idx):
-        x = self.x[self.ind[idx]].astype(np.float32)
-        y = self.y[self.ind[idx]].astype(np.float32)
+        x = self.x[self.ind[idx]].reshape((1, ROWS, COLUMNS)).astype(np.float32)
+        y = self.y[self.ind[idx]].reshape((1, ROWS, COLUMNS)).astype(np.float32)
 
         if self.transform:
             aug = self.transform(image=x, mask=y)
