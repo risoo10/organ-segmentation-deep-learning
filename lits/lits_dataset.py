@@ -39,7 +39,7 @@ class LitsDataSet():
         self.file.create_array('/', 'val', val)
 
     def write_cropped_slices(self, slcs):
-        self.file.create_array('/', 'val', slcs)
+        self.file.create_array('/', 'cropped_slices', slcs)
         self.cropped_slices = slcs
 
     def load(self, mode):
@@ -55,7 +55,7 @@ class LitsDataSet():
             self.val = self.file.get_node('/val')
             self.cropped_slices = self.file.get_node('/cropped_slices')
         except:
-            print('Tran, Test, Val not set')
+            print('Tran or Test or Val or Cropped slices not set')
 
     def save(self, x, y, start, end, patient_ind):
         self.x[start:end] = x
