@@ -3,6 +3,7 @@ from torchvision import models, transforms
 import torch
 from utils.utils import distance_transform_weight
 import numpy as np
+from utils.constants import *
 
 class LitsSet(Dataset):
     def __init__(self, ind, dset, weights=False):
@@ -17,12 +18,13 @@ class LitsSet(Dataset):
 
     def __getitem__(self, i):
         ind = self.ind_map[i]
-        x = self.dset.x[ind].reshape((1, ROWS, COLUMNS))
-        y = self.dset.y[ind].reshape((1, ROWS, COLUMNS))
+        x = self.dset.x[ind].reshape((1, WIDTH, HEIGHT))
+        _y = self.dset.y[ind]
+        y = _y.reshape((1, WIDTH, HEIGHT))
 
         if self.weights:
-            weight = distance_transform_weight(y).astype(np.float32)
-            weight = np.nan_to_num(weight)
+            weight = distance_transform_weight(_y).astype(np.float32)
+            weight = np.nan_to_num(weight).reshape((1, WIDTH, HEIGHT))
             return self.transform(x), self.transform(y), self.transform(weight)
         else:
             return self.transform(x), self.transform(y), None
