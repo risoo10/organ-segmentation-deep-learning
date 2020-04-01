@@ -1,5 +1,7 @@
 import unittest
+import torch
 from utils.metrics import *
+from utils.utils import tensor_equals
 
 
 class TestMetrics(unittest.TestCase):
@@ -15,6 +17,15 @@ class TestMetrics(unittest.TestCase):
         dice = dice_score(x, y)
         self.assertEqual(dice, 1)
 
+    def test_tensor_equals(self):
+        a = torch.from_numpy(np.ones((10, 10)))
+        b = torch.from_numpy(np.ones((10, 10)))
+        self.assertTrue(tensor_equals(a, b))
+
+    def test_tensor_equals_falsy(self):
+        a = torch.from_numpy(np.ones((10, 10)))
+        b = torch.from_numpy(np.zeros((10, 10)))
+        self.assertFalse(tensor_equals(a, b))
 
 if __name__ == '__main__':
     unittest.main()

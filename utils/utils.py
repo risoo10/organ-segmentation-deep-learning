@@ -7,6 +7,7 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from torchvision import models, transforms
 
+
 def distance_transform_weight(x):
     if x.max() == 0:
         return np.ones(x.shape) * 2
@@ -20,87 +21,95 @@ def distance_transform_weight(x):
         dt = dt ** 2
         dt = (dt + smooth / dt.max() + smooth)
         dt[x.astype(np.int)] = 0
-        return  dt
+        return dt
+
+
+def tensor_equals(a, b):
+    return torch.all(torch.eq(a, b))
+
 
 class CTDataset(Dataset):
-  def __init__(self, x, y, ind, weights=True, transform=None):
-    self.x = x
-    self.y = y
-    self.ind = ind
-    self.weights = True
-    self.transform = transform
-    self.out_transform = transforms.ToTensor()
-  
-  def __len__(self,):
-    return self.ind.shape[0]
-  
-  def __getitem__(self, idx):
-    x = self.x[self.ind[idx]].astype(np.float32)
-    y = self.y[self.ind[idx]].astype(np.float32)
-    
-    if self.transform:
-      aug = self.transform(image=x, mask=y)
-      x = np.nan_to_num(aug['image'])
-      y = np.nan_to_num(aug['mask'])
-    else:
-      x = np.nan_to_num(x)
-      y = np.nan_to_num(y)
-    
-    if self.weights:
-      weight = distance_transform_weight(y).astype(np.float32)
-      weight = np.nan_to_num(weight)
-      return self.out_transform(x), self.out_transform(y), self.out_transform(weight)
-    else:
-      return self.out_transform(x), self.out_transform(y), None
+    def __init__(self, x, y, ind, weights=True, transform=None):
+        self.x = x
+        self.y = y
+        self.ind = ind
+        self.weights = True
+        self.transform = transform
+        self.out_transform = transforms.ToTensor()
+
+    def __len__(self,):
+        return self.ind.shape[0]
+
+    def __getitem__(self, idx):
+        x = self.x[self.ind[idx]].astype(np.float32)
+        y = self.y[self.ind[idx]].astype(np.float32)
+
+        if self.transform:
+            aug = self.transform(image=x, mask=y)
+            x = np.nan_to_num(aug['image'])
+            y = np.nan_to_num(aug['mask'])
+        else:
+            x = np.nan_to_num(x)
+            y = np.nan_to_num(y)
+
+        if self.weights:
+            weight = distance_transform_weight(y).astype(np.float32)
+            weight = np.nan_to_num(weight)
+            return self.out_transform(x), self.out_transform(y), self.out_transform(weight)
+        else:
+            return self.out_transform(x), self.out_transform(y), None
 
 
 class DiceLoss(nn.Module):
-  def __init__(self):
-    super().__init__();
-    self.name = 'Dice'
-  
-  def forward(self, inputs, targets):
-    smooth = 0.000001
+    def __init__(self):
+        super().__init__()
+        self.name = 'Dice'
 
-    iflat = inputs.view(-1)
-    tflat = targets.view(-1)
+    def forward(self, inputs, targets):
+        smooth = 0.000001
 
-    intersection = (iflat * tflat).sum()
-    union = iflat.sum() + tflat.sum()
+        iflat = inputs.view(-1)
+        tflat = targets.view(-1)
 
-    dice = (2.0 * intersection + smooth) / (union + smooth)
+        intersection = (iflat * tflat).sum()
+        union = iflat.sum() + tflat.sum()
 
-    return 1 - dice
+        dice = (2.0 * intersection + smooth) / (union + smooth)
+
+        return 1 - dice
+
 
 class WeightedDiceLoss(nn.Module):
-  def __init__(self):
-    super().__init__()
-    self.diceLoss = DiceLoss()
-    self.name = 'Weighted Dice'
-  
-  def forward(self, inputs, targets, weights):
-    iflat = inputs.view(-1).cuda()
-    wflat = weights.view(-1).cuda()
+    def __init__(self):
+        super().__init__()
+        self.diceLoss = DiceLoss()
+        self.name = 'Weighted Dice'
 
-    dice_loss = self.diceLoss(inputs, targets)
-    weight_part = torch.mean(iflat * wflat)
+    def forward(self, inputs, targets, weights):
+        iflat = inputs.view(-1).cuda()
+        wflat = weights.view(-1).cuda()
 
-    return dice_loss + weight_part
+        dice_loss = self.diceLoss(inputs, targets)
+        weight_part = torch.mean(iflat * wflat)
+
+        return dice_loss + weight_part
+
 
 class WeightedBceLoss(nn.Module):
-  def __init__(self):
-    super().__init__()
-    self.bceLoss = nn.BCELoss()
-    self.name = 'Weighted BCE'
-  
-  def forward(self, inputs, targets, weights):
-    iflat = inputs.view(-1).cuda()
-    wflat = weights.view(-1).cuda()
+    def __init__(self):
+        super().__init__()
+        self.bceLoss = nn.BCELoss()
+        self.name = 'Weighted BCE'
 
-    bce_part = self.bceLoss(inputs, targets)
-    weight_part = torch.mean(iflat * wflat)
+    def forward(self, inputs, targets, weights):
+        iflat = inputs.view(-1).cuda()
+        wflat = weights.view(-1).cuda()
 
-    return bce_part + weight_part
+        bce_part = self.bceLoss(inputs, targets)
+        weight_part = torch.mean(iflat * wflat)
+
+        return bce_part + weight_part
+
 
 def plot_slice(x, y):
     plt.figure(figsize=(20, 20))
@@ -124,7 +133,8 @@ def dice_coef(y_true, y_pred):
 def write_mask_contour(img, label):
     img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
     label = label.astype(np.uint8)
-    contours, hierarchy = cv2.findContours(label, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    contours, hierarchy = cv2.findContours(
+        label, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     for i, cnt in enumerate(contours):
         if cv2.contourArea(cnt) > 10:
             cv2.drawContours(img, contours, i, (0, 0, 255))
