@@ -15,7 +15,7 @@ class LitsSet(Dataset):
     def __len__(self):
         return len(self.ind_map)
 
-    def __get_item__(self, i):
+    def __getitem__(self, i):
         ind = self.ind_map[i]
         x = self.dset.x[ind]
         y = self.dset.y[ind]
