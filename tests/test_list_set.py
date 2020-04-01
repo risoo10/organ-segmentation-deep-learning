@@ -14,7 +14,7 @@ for i in range(100):
     dset.x[i, :, :] *= i
     dset.y[i, :, :] *= i
 
-single = torch.from_numpy(np.ones((1, 512, 512)))
+single = torch.from_numpy(np.ones((1, 512, 512)).astype(np.float32))
 
 
 class TestLitsSet(unittest.TestCase):

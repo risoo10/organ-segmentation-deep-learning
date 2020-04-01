@@ -6,12 +6,19 @@ import numpy as np
 from utils.constants import *
 
 class LitsSet(Dataset):
-    def __init__(self, ind, dset, weights=False):
+    def __init__(self, ind, dset, cropped=False, weights=False):
         self.ind = ind
         self.dset = dset
-        self.ind_map = self.map_item_slice(ind)
+        self.cropped = cropped
         self.transform = torch.from_numpy
         self.weights = weights
+        
+        if cropped:
+            self.ind_map = self.crop_item_slice(ind)
+        else:
+            self.ind_map = self.map_item_slice(ind)
+
+        self.length = len(self.ind_map)
 
     def __len__(self):
         return len(self.ind_map)
@@ -28,6 +35,15 @@ class LitsSet(Dataset):
             return self.transform(x), self.transform(y), self.transform(weight)
         else:
             return self.transform(x), self.transform(y), None
+
+    def crop_item_slice(self, ind):
+        ind_map = []
+        for i in ind:
+            pat_ind = self.dset.cropped_slices[i]
+            ind_map.extend(range(pat_ind[0], pat_ind[1]))
+
+        return ind_map
+
 
     def map_item_slice(self, ind):
         ind_map = []

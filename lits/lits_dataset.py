@@ -11,6 +11,7 @@ class LitsDataSet():
         self.x = None
         self.y = None
         self.slices = None
+        self.cropped_slices = None
         self.train = None
         self.val = None
         self.test = None
@@ -37,6 +38,10 @@ class LitsDataSet():
         self.file.create_array('/', 'test', test)
         self.file.create_array('/', 'val', val)
 
+    def write_cropped_slices(self, slcs):
+        self.file.create_array('/', 'val', slcs)
+        self.cropped_slices = slcs
+
     def load(self, mode):
         self.file = tables.open_file(f'{drive_dir}/{self.filename}', mode=mode)
         self.opened = True
@@ -48,6 +53,7 @@ class LitsDataSet():
             self.train = self.file.get_node('/train')
             self.test = self.file.get_node('/test')
             self.val = self.file.get_node('/val')
+            self.cropped_slices = self.file.get_node('/cropped_slices')
         except:
             print('Tran, Test, Val not set')
 

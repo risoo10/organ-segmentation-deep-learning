@@ -4,13 +4,16 @@ import nibabel as nib
 import numpy as np
 
 
-def find_target_index(segmentation):
+def find_target_index(segmentation, verbose=False):
     organ_detected = np.array(list(map(lambda x: np.any(x), segmentation)))
     first = np.argmax(organ_detected)
     last = len(organ_detected) - np.argmax(np.flip(organ_detected)) - 1
     target = int((first + last) / 2)
     print('Organ detection', first, last, target)
-    return target
+    if verbose:
+        return target, first, last
+    else:
+        return target
 
 
 def load_as_npy(path):
