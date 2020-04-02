@@ -12,7 +12,7 @@ from computer_vision.registration import RigidRegistration
 from utils.constants import *
 
 
-def preprocess_lits(vol, segs, REG_TARGET, FILENAME = 'lits-set.h5'):
+def preprocess_lits(vol, segs, to_rotate, REG_TARGET, FILENAME = 'lits-set.h5'):
     try:
         rig_reg = RigidRegistration(REG_TARGET, 0)
         rig_reg.set_source(REG_TARGET)
@@ -46,7 +46,10 @@ def preprocess_lits(vol, segs, REG_TARGET, FILENAME = 'lits-set.h5'):
             x = normalize(x)
 
             # Rotate
-            repetitions = 1
+            if id in to_rotate:
+                repetitions = 3
+            else:
+                repetitions = 1
             y = rotate90(y, repetitions)
             x = rotate90(x, repetitions)
 

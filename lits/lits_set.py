@@ -40,7 +40,8 @@ class LitsSet(Dataset):
         ind_map = []
         for i in ind:
             pat_ind = self.dset.cropped_slices[i]
-            ind_map.extend(range(pat_ind[0], pat_ind[1]))
+            for x in range(pat_ind[0], pat_ind[1]):
+                ind_map.append(x)
 
         return ind_map
 
@@ -49,6 +50,6 @@ class LitsSet(Dataset):
         ind_map = []
         for i in ind:
             pat_ind = self.dset.slices[i]
-            ind_map.extend(range(pat_ind[0], pat_ind[1]))
-
+            for x in range(pat_ind[0], pat_ind[1]):
+                ind_map.append(x) 
         return ind_map
