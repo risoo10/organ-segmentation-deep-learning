@@ -67,4 +67,9 @@ def plot_patient_samples(indexes, dset, scale_factor=2, columns=8, set="x"):
         plt.title(f'Patient {index}')
         plt.xticks([])
         plt.yticks([])
-        plt.imshow(dset[set][ind].astype(np.float32), cmap="bone")
+
+        data = dset.x
+        if set == "y":
+            data = dset.y
+
+        plt.imshow(data[ind].astype(np.float32), cmap="bone")
