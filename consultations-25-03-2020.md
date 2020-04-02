@@ -22,10 +22,13 @@
 | TEST        | 20%      | 26              |
 | **Celkovo** | **100%** | **131**         |
 
-## Plan
 
-* [ ] Klasifikacia - Pred trenovanim vyrez ROI
-    - Nove trenovanie klasifikatora InceptionV3 ?
+
+* [x] Pred trenovanim vyrez ROI
+
+
+
+## Plan
 * [ ] Trenovanie UNET WeightDICE na LiTS datasete
 * [ ] Sagitalny a Frontalny klasifikator UNET WeightDICE
     - Doplnenenie voxelu mocninou 2ky

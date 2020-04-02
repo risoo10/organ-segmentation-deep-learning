@@ -56,7 +56,7 @@ def plot_slice(volume, segm, slice, figsize=(15, 15)):
     plt.imshow(y, cmap="tab20")
 
 
-def plot_patient_samples(indexes, dset, scale_factor=2, columns=8):
+def plot_patient_samples(indexes, dset, scale_factor=2, columns=8, set="x"):
     length = len(indexes)
     rows = np.ceil(length / columns)
     plt.figure(figsize=(columns * scale_factor, rows * scale_factor))
@@ -67,4 +67,4 @@ def plot_patient_samples(indexes, dset, scale_factor=2, columns=8):
         plt.title(f'Patient {index}')
         plt.xticks([])
         plt.yticks([])
-        plt.imshow(dset.x[ind].astype(np.float32), cmap="bone")
+        plt.imshow(dset[set][ind].astype(np.float32), cmap="bone")
