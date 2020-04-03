@@ -39,6 +39,7 @@ class LitsDataSet():
 
     def write_cropped_slices(self, slcs):
         self.cropped_slices = slcs
+        self.write_pickle_data()
         
     def write_pickle_data(self):
         data = {}
