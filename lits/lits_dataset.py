@@ -1,6 +1,7 @@
 import tables
 import numpy as np
 from utils.constants import *
+import pickle
 
 
 class LitsDataSet():
@@ -17,7 +18,7 @@ class LitsDataSet():
         self.test = None
 
     def load_write(self):
-        self.file = tables.open_file(f'{drive_dir}/{self.filename}', mode="w")
+        self.file = tables.open_file(f'{drive_dir}/{self.filename}.h5', mode="w")
         self.opened = True
 
         filters = tables.Filters(complib='blosc', complevel=5)
@@ -33,27 +34,33 @@ class LitsDataSet():
             '/', 'slices', slices_atom, (PATIENTS, 2), filters=filters)
 
     def write_splits(self):
-        train, test, val = self.split_test_val_train(PATIENTS)
-        self.file.create_array('/', 'train', train)
-        self.file.create_array('/', 'test', test)
-        self.file.create_array('/', 'val', val)
+        self.train, self.test, self.val = self.split_test_val_train(PATIENTS)
+        self.write_pickle_data()
 
     def write_cropped_slices(self, slcs):
-        self.file.create_array('/', 'cropped_slices', slcs)
         self.cropped_slices = slcs
+        
+    def write_pickle_data(self):
+        data = {}
+        data["train"] = self.train
+        data["test"] = self.test
+        data["val"] = self.val
+        data["cropped_slices"] = self.cropped_slices
+        pickle.dump(data, open(f'{drive_dir}/{self.filename}.p', "wb"))
 
     def load(self, mode):
-        self.file = tables.open_file(f'{drive_dir}/{self.filename}', mode=mode)
+        self.file = tables.open_file(f'{drive_dir}/{self.filename}.h5', mode=mode)
         self.opened = True
         self.x = self.file.get_node('/x')
         self.y = self.file.get_node('/y')
         self.slices = self.file.get_node('/slices')
 
         try:
-            self.train = self.file.get_node('/train')
-            self.test = self.file.get_node('/test')
-            self.val = self.file.get_node('/val')
-            self.cropped_slices = self.file.get_node('/cropped_slices')
+            data = pickle.load(open(f'{drive_dir}/{self.filename}.p', "rb"))
+            self.train = data['train']
+            self.test = data['test']
+            self.val = data['val']
+            self.cropped_slices = data['cropped_slices']
         except:
             print('Tran or Test or Val or Cropped slices not set')
 
