@@ -6,12 +6,13 @@ import numpy as np
 from utils.constants import *
 
 class LitsSet(Dataset):
-    def __init__(self, ind, dset, cropped=False, weights=False, transform=torch.from_numpy):
+    def __init__(self, ind, dset, cropped=False, weights=False, transform=torch.from_numpy, classification=False):
         self.ind = ind
         self.dset = dset
         self.cropped = cropped
         self.transform = transform
         self.weights = weights
+        self.classification = classification
         
         if cropped:
             self.ind_map = self.crop_item_slice(ind)
@@ -27,14 +28,19 @@ class LitsSet(Dataset):
         ind = self.ind_map[i]
         x = self.dset.x[ind].reshape((1, WIDTH, HEIGHT)).astype(np.float32)
         _y = self.dset.y[ind]
-        y = _y.reshape((1, WIDTH, HEIGHT)).astype(np.float32)
 
-        if self.weights:
-            weight = distance_transform_weight(_y).astype(np.float32)
-            weight = np.nan_to_num(weight).reshape((1, WIDTH, HEIGHT)).astype(np.float32)
-            return self.transform(x), self.transform(y), self.transform(weight)
+        if self.classification:
+            y = np.any(_y)
+            return self.transform(x), torch.from_numpy(y), None
         else:
-            return self.transform(x), self.transform(y), None
+            y = _y.reshape((1, WIDTH, HEIGHT)).astype(np.float32)
+
+            if self.weights:
+                weight = distance_transform_weight(_y).astype(np.float32)
+                weight = np.nan_to_num(weight).reshape((1, WIDTH, HEIGHT)).astype(np.float32)
+                return self.transform(x), self.transform(y), self.transform(weight)
+            else:
+                return self.transform(x), self.transform(y), None
 
     def crop_item_slice(self, ind):
         ind_map = []
