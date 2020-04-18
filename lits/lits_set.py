@@ -30,7 +30,7 @@ class LitsSet(Dataset):
         _y = self.dset.y[ind]
 
         if self.classification:
-            y = np.any(_y)
+            y = np.array(np.any(_y)).astype(np.float32)
             return self.transform(x), torch.from_numpy(y), None
         else:
             y = _y.reshape((1, WIDTH, HEIGHT)).astype(np.float32)
