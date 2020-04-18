@@ -41,9 +41,7 @@ class TrainingLogger():
         path = f'{drive_dir}/torch/logs/{self.MODEL_NAME}-training({",".join(columns)}).csv'
         return genfromtxt(path, delimiter=',')
 
-    def plotTraining(self, metric, lossName, title, epoch=None, legend=True):
-        loss = metric[:, 1]
-        val_loss = metric[:, 3]
+    def plotTraining(self, loss, val_loss, lossName, title, epoch=None, legend=True):
         plt.plot(loss, 'b')
         plt.plot(val_loss, 'g')
 
