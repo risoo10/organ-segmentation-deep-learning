@@ -15,6 +15,7 @@ class LitsSet(Dataset):
         self.weights = weights
         self.classification = classification
         self.augmentation = augmentation
+        self.empty_weight = torch.Tensor()
 
         if cropped:
             self.ind_map = self.crop_item_slice(ind)
@@ -38,7 +39,7 @@ class LitsSet(Dataset):
 
         if self.classification:
             y = np.array(np.any(_y)).astype(np.float32)
-            return self.transform(x), torch.from_numpy(y), None
+            return self.transform(x), torch.from_numpy(y), self.empty_weight
         else:
             y = _y.reshape((1, WIDTH, HEIGHT)).astype(np.float32)
 
@@ -48,7 +49,7 @@ class LitsSet(Dataset):
                     (1, WIDTH, HEIGHT)).astype(np.float32)
                 return self.transform(x), self.transform(y), self.transform(weight)
             else:
-                return self.transform(x), self.transform(y), None
+                return self.transform(x), self.transform(y), self.empty_weight
 
     def crop_item_slice(self, ind):
         ind_map = []

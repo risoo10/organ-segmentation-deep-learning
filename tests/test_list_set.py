@@ -29,12 +29,12 @@ class TestLitsSet(unittest.TestCase):
         x, y, w = lits_set.__getitem__(0)
         self.assertTrue(tensor_equals(x, single * 40))
         self.assertTrue(tensor_equals(y, single * 40))
-        self.assertEqual(w, None)
+        self.assertEqual(w.nelement(), 0)
 
         x, y, w = lits_set.__getitem__(19)
         self.assertTrue(tensor_equals(x, single * 99))
         self.assertTrue(tensor_equals(y, single * 99))
-        self.assertEqual(w, None)
+        self.assertEqual(w.nelement(), 0)
         
 
     def test_set_get_weights(self):
