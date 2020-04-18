@@ -26,7 +26,7 @@ class TrainingLogger():
             writer.writerow(data)
 
     def loadModalCheckpoint(self, model=None, loss=None, optimizer=None, epoch=None):
-        path = f'{drive_dir}/torch/checkpoints/lits/UNET_LITS-loss=WightedDice-epochs=20.pth.tar'
+        path = f'{drive_dir}/torch/checkpoints/{self.DIR}{self.MODEL_NAME}.pth.tar'
         checkpoint = torch.load(path)
 
         if model != None:
