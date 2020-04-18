@@ -6,11 +6,11 @@ import numpy as np
 from utils.constants import *
 
 class LitsSet(Dataset):
-    def __init__(self, ind, dset, cropped=False, weights=False):
+    def __init__(self, ind, dset, cropped=False, weights=False, transform=torch.from_numpy):
         self.ind = ind
         self.dset = dset
         self.cropped = cropped
-        self.transform = torch.from_numpy
+        self.transform = transform
         self.weights = weights
         
         if cropped:
