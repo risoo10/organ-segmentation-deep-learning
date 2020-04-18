@@ -5,15 +5,17 @@ from utils.utils import distance_transform_weight
 import numpy as np
 from utils.constants import *
 
+
 class LitsSet(Dataset):
-    def __init__(self, ind, dset, cropped=False, weights=False, transform=torch.from_numpy, classification=False):
+    def __init__(self, ind, dset, cropped=False, weights=False, transform=torch.from_numpy, classification=False, augmentation=None):
         self.ind = ind
         self.dset = dset
         self.cropped = cropped
         self.transform = transform
         self.weights = weights
         self.classification = classification
-        
+        self.augmentation = augmentation
+
         if cropped:
             self.ind_map = self.crop_item_slice(ind)
         else:
@@ -29,6 +31,11 @@ class LitsSet(Dataset):
         x = self.dset.x[ind].reshape((1, WIDTH, HEIGHT)).astype(np.float32)
         _y = self.dset.y[ind]
 
+        if self.augmentation != None:
+            aug = self.augmentation(image=x, mask=_y)
+            x = aug["image"]
+            _y = aug["mask"]
+
         if self.classification:
             y = np.array(np.any(_y)).astype(np.float32)
             return self.transform(x), torch.from_numpy(y), None
@@ -37,7 +44,8 @@ class LitsSet(Dataset):
 
             if self.weights:
                 weight = distance_transform_weight(_y).astype(np.float32)
-                weight = np.nan_to_num(weight).reshape((1, WIDTH, HEIGHT)).astype(np.float32)
+                weight = np.nan_to_num(weight).reshape(
+                    (1, WIDTH, HEIGHT)).astype(np.float32)
                 return self.transform(x), self.transform(y), self.transform(weight)
             else:
                 return self.transform(x), self.transform(y), None
@@ -51,11 +59,10 @@ class LitsSet(Dataset):
 
         return ind_map
 
-
     def map_item_slice(self, ind):
         ind_map = []
         for i in ind:
             pat_ind = self.dset.slices[i]
             for x in range(pat_ind[0], pat_ind[1]):
-                ind_map.append(x) 
+                ind_map.append(x)
         return ind_map
