@@ -70,6 +70,26 @@ def preprocess_lits(vol, segs, to_rotate, REG_TARGET, FILENAME = 'lits-set.h5'):
 def rotate90(x, times):
     return np.rot90(x, times, [1, 2])
 
+def get_cropped_slices(dset):
+    cropped_slices = []
+    for ind in tqdm.tqdm(dset.slices[:]):
+        print(ind)
+        y = dset.y[ind[0]:ind[1], :, :]
+        target, first, last = find_target_index(y, verbose=True)
+        length = last - first
+        original_length = ind[1] - ind[0]
+        padding = int(length / 5)
+        first = first - padding
+        last = last + padding
+        first = np.max([ind[0], ind[0] + first])
+        last = np.min([ind[1], ind[0] + last])
+        length = last - first
+
+        cropped_slices.append([first, last])
+        print('[',first, last, '] P:', padding, 'R:', length/original_length)
+        print('************************')
+    return cropped_slices
+
 
 def load_target():
     path = f'{drive_dir}/LiTS/Training Batch 1/'

@@ -1,6 +1,8 @@
 from utils.constants import *
 import torch
+import matplotlib.pyplot as plt
 import csv
+from numpy import genfromtxt
 
 
 class TrainingLogger():
@@ -22,3 +24,34 @@ class TrainingLogger():
         with open(path, 'a+') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=columns)
             writer.writerow(data)
+
+    def loadModalCheckpoint(self, model=None, loss=None, optimizer=None, epoch=None):
+        path = f'{drive_dir}/torch/checkpoints/lits/UNET_LITS-loss=WightedDice-epochs=20.pth.tar'
+        checkpoint = torch.load(path)
+
+        if model != None:
+            model.load_state_dict(checkpoint["model_state_dict"])
+
+        if optimizer != None:
+            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+
+        return model, optimizer, checkpoint["loss"], checkpoint["epoch"]
+
+    def loadTrainingData(self, columns):
+        path = f'{drive_dir}/torch/logs/{self.MODEL_NAME}-training({",".join(columns)}).csv'
+        return genfromtxt(path, delimiter=',')
+
+    def plotTraining(self, metric, lossName, title, epoch=None, legend=True):
+        loss = metric[:, 1]
+        val_loss = metric[:, 3]
+        plt.plot(loss, 'b')
+        plt.plot(val_loss, 'g')
+
+        if epoch != None:
+            plt.plot([epoch], val_loss[epoch - 1], 'rx',  markersize=12)
+
+        plt.xlabel('epoch')
+        plt.ylabel(f'loss: {lossName}')
+        if legend:
+            plt.legend(['training', 'validation', 'min. validation loss'])
+        plt.title(title)
