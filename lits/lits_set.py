@@ -7,7 +7,17 @@ from utils.constants import *
 
 
 class LitsSet(Dataset):
-    def __init__(self, ind, dset, cropped=False, weights=False, transform=torch.from_numpy, classification=False, augmentation=None):
+    def __init__(
+            self,
+            ind,
+            dset,
+            cropped=False,
+            weights=False,
+            transform=torch.from_numpy,
+            classification=False,
+            augmentation=None,
+            plane="horizontal"
+        ):
         self.ind = ind
         self.dset = dset
         self.cropped = cropped
@@ -16,6 +26,7 @@ class LitsSet(Dataset):
         self.classification = classification
         self.augmentation = augmentation
         self.empty_weight = torch.Tensor()
+        self.plane = plane
 
         if cropped:
             self.ind_map = self.crop_item_slice(ind)
@@ -55,15 +66,36 @@ class LitsSet(Dataset):
         ind_map = []
         for i in ind:
             pat_ind = self.dset.cropped_slices[i]
-            for x in range(pat_ind[0], pat_ind[1]):
-                ind_map.append(x)
-
+            self.plane_slice(ind_map, pat_ind)
         return ind_map
 
     def map_item_slice(self, ind):
         ind_map = []
         for i in ind:
             pat_ind = self.dset.slices[i]
-            for x in range(pat_ind[0], pat_ind[1]):
-                ind_map.append(x)
+            self.plane_slice(ind_map, pat_ind)
         return ind_map
+
+    def plane_slice(self, ind_map, pat_ind):
+        if self.plane == 'horizontal':
+            self.horizontal_item_slice(ind_map, pat_ind)
+        elif self.plane == 'frontal':
+            self.vertical_item_slice(ind_map, pat_ind)
+        elif self.plane == 'sagital':
+            self.sagital_item_slice(ind_map, pat_ind)
+
+    def horizontal_item_slice(self, ind_map, pat_ind):
+        for x in range(pat_ind[0], pat_ind[1]):
+            ind_map.append(x)
+
+    def vertical_item_slice(self, ind_map, pat_ind):
+        pat_slice = slice(pat_ind[0], pat_ind[1])
+        all = slice(0,WIDTH)
+        for i in range(WIDTH):
+            ind_map.append((pat_slice, i, all))
+
+    def sagital_item_slice(self, ind_map, pat_ind):
+        pat_slice = slice(pat_ind[0], pat_ind[1])
+        all = slice(0,HEIGHT)
+        for i in range(HEIGHT):
+            ind_map.append((pat_slice, all, i))

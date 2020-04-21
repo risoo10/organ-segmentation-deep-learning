@@ -163,3 +163,12 @@ def export_png(array, output_dir, filename):
         path = os.path.join(output_dir, filename, str(lbl_id)) + '.png'
         lbl_img = (array[lbl_id] * 255).astype(np.uint8)
         cv2.imwrite(path, lbl_img)
+
+
+def tensorToNumpy(tensor, round=False):
+  if tensor.is_cuda:
+    tensor = tensor.detach().cpu()
+  tensor = tensor.numpy()
+  if round : tensor = np.round(tensor)
+  return tensor
+
