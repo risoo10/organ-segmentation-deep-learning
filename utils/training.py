@@ -46,7 +46,7 @@ class TrainingLogger():
         plt.plot(val_loss, 'g')
 
         if epoch != None:
-            plt.plot([epoch], val_loss[epoch - 1], 'rx',  markersize=12)
+            plt.plot([epoch], val_loss[epoch], 'rx',  markersize=12)
 
         plt.xlabel('epoch')
         plt.ylabel(f'loss: {lossName}')
