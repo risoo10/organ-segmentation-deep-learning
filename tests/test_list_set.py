@@ -82,12 +82,12 @@ class TestLitsSet(unittest.TestCase):
         other_dset, other_single = create_dset()
         other_dset.x[:, :, 55] = 0
         other_dset.y[:, :, 55] = 2
-        lits_set = LitsSet([1, 2], other_dset, plane="vertical")
+        lits_set = LitsSet([1, 2], other_dset, plane="frontal")
         
         ind = lits_set.ind_map[9]
         x = other_dset.x[ind]
         y = other_dset.y[ind]
-        print('Vertical slice', x.shape, y.shape, ind)
+        print('Frontal slice', x.shape, y.shape, ind)
         self.assertEqual(x[0, 55], 0)
         self.assertEqual(y[0, 55], 2)
 
