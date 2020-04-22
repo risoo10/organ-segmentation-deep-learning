@@ -40,7 +40,8 @@ class LitsSet(Dataset):
 
     def __getitem__(self, i):
         ind = self.ind_map[i]
-        x = self.dset.x[ind].reshape((1, WIDTH, HEIGHT)).astype(np.float32)
+        x = self.dset.x[ind]
+        x = x[np.newaxis, :].astype(np.float32)
         _y = self.dset.y[ind]
 
         if self.augmentation != None:
@@ -52,12 +53,12 @@ class LitsSet(Dataset):
             y = np.array(np.any(_y)).astype(np.float32)
             return self.transform(x), torch.from_numpy(y), self.empty_weight
         else:
-            y = _y.reshape((1, WIDTH, HEIGHT)).astype(np.float32)
+            y = _y[np.newaxis, :].astype(np.float32)
 
             if self.weights:
                 weight = distance_transform_weight(_y).astype(np.float32)
-                weight = np.nan_to_num(weight).reshape(
-                    (1, WIDTH, HEIGHT)).astype(np.float32)
+                weight = np.nan_to_num(weight)
+                weight = weight[np.newaxis, :].astype(np.float32)
                 return self.transform(x), self.transform(y), self.transform(weight)
             else:
                 return self.transform(x), self.transform(y), self.empty_weight

@@ -19,6 +19,14 @@ def list_connectivities(labels_out):
     for i in range(0, max_label):
         print('Label', i, ' VOLUME:', np.sum(labels_out == i))
 
+
+def postprocess_connectivity(pred):
+    labels_out = cc3d.connected_components(pred.astype(np.int32))
+    max_label = np.max(labels_out)
+    pred = labels_out == 1
+    return pred, max_label
+
+
 def postprocess():
     # LOAD DATA
     id = 0
@@ -32,9 +40,7 @@ def postprocess():
     print('Loaded data', pred.shape, 'DICE:', dice_f)
 
     # CONNECTIVITY
-    labels_out = cc3d.connected_components(pred.astype(np.int32))
-    max_label = np.max(labels_out)
-    pred = labels_out == 1
+    pred, max_label = postprocess_connectivity(pred)
     dice_f = dice_score(pred, label)
     print('Connectivity | max:', max_label, 'DICE:', dice_f)
     # list_connectivities(labels_out)

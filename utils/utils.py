@@ -169,6 +169,15 @@ def tensorToNumpy(tensor, round=False):
   if tensor.is_cuda:
     tensor = tensor.detach().cpu()
   tensor = tensor.numpy()
-  if round : tensor = np.round(tensor)
+  if round :
+      tensor = np.round(tensor)
   return tensor
+
+
+def printMetrics(metrics, scores, end='\n', title='Metrics'):
+  text = f'{title}: '
+  for i, metric in enumerate(metrics):
+    text = f'{text}{metric.name}={np.round(scores[i], 5)}, '
+    
+  print(text, end=end)
 

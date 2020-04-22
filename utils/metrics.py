@@ -16,8 +16,7 @@ class Accuracy(nn.Module):
         self.name = 'Accuracy'
 
     def __call__(self, input, target):
-        return accuracy_score(input, target)
-
+        return accuracy_score(target, input)
 
 class Recall(nn.Module):
     def __init__(self):
@@ -25,4 +24,4 @@ class Recall(nn.Module):
         self.name = 'Recall'
 
     def __call__(self, input, target):
-        return recall_score(input, target)
+        return recall_score(target, input, zero_division=1)
