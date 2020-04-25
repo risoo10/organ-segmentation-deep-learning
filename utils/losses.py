@@ -35,7 +35,7 @@ class DiceLoss(nn.Module):
 class TverskyLoss(nn.Module):
     def __init__(self, beta):
         super().__init__()
-        self.name = f'Tversy(a={beta})'
+        self.name = f'Tversky(a={beta})'
         self.alpha = 1 - beta
         self.beta = beta
 
@@ -47,7 +47,7 @@ class WeightedLoss(nn.Module):
     def __init__(self, loss):
         super().__init__()
         self.loss = loss
-        self.name = f'Weighted Dice {loss.name}'
+        self.name = f'Weighted {loss.name}'
 
     def forward(self, inputs, true, weights):
         iflat = inputs.contiguous().view(-1)
