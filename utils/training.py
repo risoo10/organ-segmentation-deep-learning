@@ -49,7 +49,7 @@ class TrainingLogger():
             plt.plot([epoch], val_loss[epoch], 'rx',  markersize=12)
 
         plt.xlabel('epoch')
-        plt.ylabel(f'loss: {lossName}')
+        plt.ylabel(f'metric: {lossName}')
         if legend:
             plt.legend(['training', 'validation', 'min. validation loss'])
         plt.title(title)

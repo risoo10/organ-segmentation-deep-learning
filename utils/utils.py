@@ -60,57 +60,6 @@ class CTDataset(Dataset):
             return self.out_transform(x), self.out_transform(y), None
 
 
-class DiceLoss(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.name = 'Dice'
-
-    def forward(self, inputs, targets):
-        smooth = 0.000001
-
-        iflat = inputs.view(-1)
-        tflat = targets.view(-1)
-
-        intersection = (iflat * tflat).sum()
-        union = iflat.sum() + tflat.sum()
-
-        dice = (2.0 * intersection + smooth) / (union + smooth)
-
-        return 1 - dice
-
-
-class WeightedDiceLoss(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.diceLoss = DiceLoss()
-        self.name = 'Weighted Dice'
-
-    def forward(self, inputs, targets, weights):
-        iflat = inputs.view(-1).cuda()
-        wflat = weights.view(-1).cuda()
-
-        dice_loss = self.diceLoss(inputs, targets)
-        weight_part = torch.mean(iflat * wflat)
-
-        return dice_loss + weight_part
-
-
-class WeightedBceLoss(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.bceLoss = nn.BCELoss()
-        self.name = 'Weighted BCE'
-
-    def forward(self, inputs, targets, weights):
-        iflat = inputs.view(-1).cuda()
-        wflat = weights.view(-1).cuda()
-
-        bce_part = self.bceLoss(inputs, targets)
-        weight_part = torch.mean(iflat * wflat)
-
-        return bce_part + weight_part
-
-
 def plot_slice(x, y):
     plt.figure(figsize=(20, 20))
     plt.subplot(1, 2, 1)
