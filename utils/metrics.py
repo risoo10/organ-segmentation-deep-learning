@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
-from sklearn.metrics import accuracy_score, recall_score
+from sklearn.metrics import accuracy_score, recall_score, roc_auc_score
 
 
 def dice_score(x, y):
@@ -26,3 +26,12 @@ class Recall(nn.Module):
 
     def __call__(self, input, target):
         return recall_score(target, input, zero_division=1)
+
+class RocAucScore(nn.Module):
+    def __init__(self):
+        pass
+
+    def __call__(self, input, target):
+        pred = input.numpy().detach()
+        true = target.numpy().detach()
+        return roc_auc_score(true, pred) 

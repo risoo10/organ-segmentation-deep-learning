@@ -94,6 +94,37 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(round(score.item(), 2), 0.32)
 
 
+    # TEST DIFFERENTIABILITY
+    def test_diff_tversky(self):
+        loss = TverskyLoss(beta=0.3)
+        x = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        y = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        self.assertTrue(torch.autograd.gradcheck(loss, (x, y), raise_exception=False))
+
+    def test_diff_dice(self):
+        loss = DiceLoss()
+        x = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        y = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        self.assertTrue(torch.autograd.gradcheck(loss, (x, y), raise_exception=False))
+    
+    def test_weighted_dice(self):
+        sub_loss = DiceLoss()
+        loss = WeightedLoss(sub_loss)
+        x = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        y = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        w = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        self.assertTrue(torch.autograd.gradcheck(loss, (x, y, w), raise_exception=False))
+
+    def test_weighted_tversky(self):
+        sub_loss = TverskyLoss(beta=0.3)
+        loss = WeightedLoss(sub_loss)
+        x = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        y = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        w = torch.ones((1, 1, 10, 10), requires_grad=True, dtype=torch.float64)
+        self.assertTrue(torch.autograd.gradcheck(loss, (x, y, w), raise_exception=False))
+
+
+    # OTHER
     def test_tensor_equals(self):
         a = torch.from_numpy(np.ones((10, 10)))
         b = torch.from_numpy(np.ones((10, 10)))
