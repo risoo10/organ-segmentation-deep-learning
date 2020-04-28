@@ -29,7 +29,8 @@ class Recall(nn.Module):
 
 class RocAucScore(nn.Module):
     def __init__(self):
-        pass
+        super(Recall, self)
+        self.name = 'Roc AUC'
 
     def __call__(self, input, target):
         pred = input.numpy().detach()
