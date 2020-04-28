@@ -27,9 +27,9 @@ class Recall(nn.Module):
     def __call__(self, input, target):
         return recall_score(target, input, zero_division=1)
 
-class RocAucScore(nn.Module):
+class RocAuc(nn.Module):   
     def __init__(self):
-        super(RocAucScore, self)
+        super().__init__()
         self.name = 'Roc AUC'
 
     def __call__(self, input, target):
