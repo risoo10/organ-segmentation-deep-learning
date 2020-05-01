@@ -5,7 +5,7 @@ import pickle
 
 
 class DynamicDataset():
-    def __init__(self, filepath, shape, sequences):
+    def __init__(self, filepath, shape, sequences, dir=drive_dir):
         self.opened = False
         self.filename = filepath
         self.file = None
@@ -18,9 +18,10 @@ class DynamicDataset():
         self.test = None
         self.shape = shape
         self.sequences = sequences
+        self.dir = dir
 
     def load_write(self):
-        self.file = h5py.File(f'{drive_dir}/{self.filename}.hdf5', mode="w")
+        self.file = h5py.File(f'{self.dir}/{self.filename}.hdf5', mode="w")
         self.opened = True
 
         self.x = self.file.create_dataset(
@@ -45,18 +46,18 @@ class DynamicDataset():
         data["test"] = self.test
         data["val"] = self.val
         data["cropped_slices"] = self.cropped_slices
-        pickle.dump(data, open(f'{drive_dir}/{self.filename}.p', "wb"))
+        pickle.dump(data, open(f'{self.dir}/{self.filename}.p', "wb"))
 
     def load(self, mode):
         self.file = h5py.File(
-            f'{drive_dir}/{self.filename}.hdf5', mode=mode)
+            f'{self.dir}/{self.filename}.hdf5', mode=mode)
         self.opened = True
         self.x = self.file['x']
         self.y = self.file['y']
         self.slices = self.file['slices']
 
         try:
-            data = pickle.load(open(f'{drive_dir}/{self.filename}.p', "rb"))
+            data = pickle.load(open(f'{self.dir}/{self.filename}.p', "rb"))
             self.train = data['train']
             self.test = data['test']
             self.val = data['val']
