@@ -1,6 +1,6 @@
 import tables
 import numpy as np
-from livseg_utils.constants import *
+from utils.constants import *
 import pickle
 
 

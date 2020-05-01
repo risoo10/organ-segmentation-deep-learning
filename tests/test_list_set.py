@@ -2,7 +2,7 @@ import unittest
 import torch
 from lits.lits_set import *
 from lits.lits_dataset import *
-from livseg_utils.utils import tensor_equals
+from utils.utils import tensor_equals
 
 def create_dset():
     dset = LitsDataSet("")

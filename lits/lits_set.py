@@ -1,9 +1,9 @@
 from torch.utils.data import Dataset
 from torchvision import models, transforms
 import torch
-from livseg_utils.utils import distance_transform_weight
+from utils.utils import distance_transform_weight
 import numpy as np
-from livseg_utils.constants import *
+from utils.constants import *
 
 
 class LitsSet(Dataset):

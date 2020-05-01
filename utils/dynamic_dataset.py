@@ -1,5 +1,5 @@
 import h5py
-from livseg_utils.constants import *
+from utils.constants import *
 import numpy as np
 import pickle
 

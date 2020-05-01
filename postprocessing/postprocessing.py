@@ -2,7 +2,7 @@ import cc3d
 import numpy as np
 import nibabel as nib
 import matplotlib.pyplot as plt
-from livseg_utils.metrics import dice_score
+from utils.metrics import dice_score
 from vtkplotter import *
 import cc3d
 
