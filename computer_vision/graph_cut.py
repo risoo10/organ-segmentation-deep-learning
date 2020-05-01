@@ -1,6 +1,6 @@
 import numpy as np
 import cv2.cv2 as cv2
-from utils import write_mask_contour, dice_coef
+from livseg_utils import write_mask_contour, dice_coef
 
 
 # This code was modified from the official OPENCV github page for samples

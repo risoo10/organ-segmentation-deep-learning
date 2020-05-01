@@ -9,7 +9,7 @@ from lits.helpers import load_as_npy, plot_slice, find_target_index
 from computer_vision.data_loader import normalize
 from lits.lits_dataset import LitsDataSet
 from computer_vision.registration import RigidRegistration
-from utils.constants import *
+from livseg_utils.constants import *
 
 
 def preprocess_lits(vol, segs, to_rotate, REG_TARGET, FILENAME = 'lits-set.h5'):

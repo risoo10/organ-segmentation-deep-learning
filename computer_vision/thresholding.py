@@ -1,7 +1,7 @@
 from skimage import feature
 import cv2 as cv2
-from utils import *
-from utils import write_mask_contour
+from livseg_utils import *
+from livseg_utils import write_mask_contour
 import numpy as np
 
 # Empty function

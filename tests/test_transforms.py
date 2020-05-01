@@ -2,7 +2,7 @@ import unittest
 import torch
 import numpy as np
 from inception.transforms import CatTransform, CustomResize, ReshapeTransform
-from utils.constants import *
+from livseg_utils.constants import *
 import matplotlib.pyplot as plt
 from torchvision.transforms import Compose
 

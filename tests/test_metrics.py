@@ -1,8 +1,8 @@
 import unittest
 import torch
 from torch.nn import BCELoss
-from utils.losses import DiceLoss, TverskyLoss, WeightedLoss
-from utils.utils import tensor_equals
+from livseg_utils.losses import DiceLoss, TverskyLoss, WeightedLoss
+from livseg_utils.utils import tensor_equals
 import numpy as np
 
 

@@ -1,4 +1,4 @@
-from utils.constants import *
+from livseg_utils.constants import *
 import torch
 import matplotlib.pyplot as plt
 import csv
