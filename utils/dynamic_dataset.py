@@ -21,7 +21,7 @@ class DynamicDataset():
         self.dir = dir
 
     def load_write(self):
-        self.file = h5py.File(f'{self.dir}/{self.filename}.h5', mode="w")
+        self.file = h5py.File(f'{self.dir}/{self.filename}.hdf5', mode="w")
         self.opened = True
 
         self.x = self.file.create_dataset(
@@ -50,7 +50,7 @@ class DynamicDataset():
 
     def load(self, mode):
         self.file = h5py.File(
-            f'{self.dir}/{self.filename}.h5', mode=mode)
+            f'{self.dir}/{self.filename}.hdf5', mode=mode)
         self.opened = True
         self.x = self.file['x']
         self.y = self.file['y']
