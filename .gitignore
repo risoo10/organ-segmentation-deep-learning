@@ -6,3 +6,4 @@ __pycache__/
 *.h5
 events.out.tfevents*
 .scannerwork/
+*.hdf5
