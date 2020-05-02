@@ -27,7 +27,7 @@ class DynamicSet(Dataset):
 
         assert set in ['train', 'test', 'val']
         self.set = set
-        ind = dset_file[set][:]
+        ind = dset_file[set][:].astype(np.int)
         self.dset_file = dset_file
         self.cropped = cropped
         self.transform = transform
