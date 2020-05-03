@@ -90,8 +90,8 @@ class SmallUnet(nn.Module):
       self.down3 = Down(256, 512 // factor)
       self.up1 = Up(512, 256 // factor, bilinear)
       self.up2 = Up(256, 128 // factor, bilinear)
-      self.up3 = Up(128, 64 // factor, bilinear)
-      self.outc = OutConv(64, out_channels)
+      self.up3 = Up(128, 64, bilinear)
+      self.outc = OutConv(32, out_channels)
 
   def forward(self, x):
       x1 = self.inc(x)
