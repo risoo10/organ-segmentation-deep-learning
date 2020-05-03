@@ -87,9 +87,9 @@ class SmallUnet(nn.Module):
       self.inc = DoubleConv(n_channels, 64)
       self.down1 = Down(64, 128)
       self.down2 = Down(128, 256)
-      self.down3 = Down(256, 256)
-      self.up1 = Up(512, 128, bilinear)
-      self.up2 = Up(256, 64, bilinear)
+      self.down3 = Down(256, 512)
+      self.up1 = Up(512, 256, bilinear)
+      self.up2 = Up(256, 128, bilinear)
       self.up3 = Up(128, 64, bilinear)
       self.outc = OutConv(64, out_channels)
 

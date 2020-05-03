@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 from torch.utils.data import Dataset
 from utils.utils import distance_transform_weight
+from tqdm import tqdm
 
 
 class Slice:
@@ -27,7 +28,7 @@ class DynamicSet(Dataset):
 
         assert set in ['train', 'test', 'val']
         self.set = set
-        ind = dset_file[set][:].astype(np.int)
+        self.ind = dset_file[set][:].astype(np.int)
         self.dset_file = dset_file
         self.cropped = cropped
         self.transform = transform
@@ -38,9 +39,9 @@ class DynamicSet(Dataset):
         self.plane = plane
 
         if cropped:
-            self.ind_map = self.crop_item_slice(ind)
+            self.ind_map = self.crop_item_slice()
         else:
-            self.ind_map = self.map_item_slice(ind)
+            self.ind_map = self.map_item_slice()
 
         self.length = len(self.ind_map)
 
@@ -72,21 +73,21 @@ class DynamicSet(Dataset):
             else:
                 return self.transform(x), self.transform(y), self.empty_weight
 
-    def crop_item_slice(self, ind):
+    def crop_item_slice(self):
         ind_map = []
-        for i in ind:
-            id = str(i)
-            boundaries = self.dset_file[id]['cropped'][:].astype(np.int)
-            self.plane_slice(id, boundaries, ind_map)
+        for pat_id in tqdm(self.ind):
+            pat_id = str(pat_id)
+            boundaries = self.dset_file[pat_id]['cropped'][:].astype(np.int)
+            self.plane_slice(pat_id, boundaries, ind_map)
         return ind_map
 
-    def map_item_slice(self, ind):
+    def map_item_slice(self):
         ind_map = []
-        for i in ind:
-            id = str(i)
-            total = self.dset_file[id]['x'].shape[0]
+        for pat_id in tqdm(self.ind):
+            pat_id = str(pat_id)
+            total = self.dset_file[pat_id]['x'].shape[0]
             boundaries = [0, total]
-            self.plane_slice(id, boundaries, ind_map)
+            self.plane_slice(pat_id, boundaries, ind_map)
         return ind_map
 
     def plane_slice(self, id, boundaries, ind_map):
@@ -102,7 +103,7 @@ class DynamicSet(Dataset):
         for x in range(boundaries[0], boundaries[1]):
             ind_map.append(
                 Slice(id, (x, all, all))
-            )
+            )   
 
     def vertical_item_slice(self, ind_map,  id, boundaries):
         all = slice(0, WIDTH)
