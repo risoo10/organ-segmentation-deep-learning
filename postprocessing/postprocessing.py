@@ -13,6 +13,18 @@ DIR = 'C:/RISKO/SKOLA/Dimplomka/3d-viz/'
 def get_file(data, id):
     return f'UNET_MODEL_LIVER_AUGMENT-loss=WightedDice-epochs=40-{data}-ID-{id}.nii.gz'
 
+def plot_frontal_sagital():
+    plt.figure()
+    plt.title('Sagital')
+    plt.imshow(label[:, 250, :], cmap="bone")
+
+
+    plt.figure()
+    plt.title('Frontal')
+    plt.imshow(label[:, :, 250], cmap="bone")
+
+    plt.show()
+
 
 def list_connectivities(labels_out):
     max_label = np.max(labels_out)
@@ -40,9 +52,11 @@ def postprocess():
     print('Loaded data', pred.shape, 'DICE:', dice_f)
 
     # CONNECTIVITY
-    pred, max_label = postprocess_connectivity(pred)
+    # pred, max_label = postprocess_connectivity(pred)
+
+    
     dice_f = dice_score(pred, label)
-    print('Connectivity | max:', max_label, 'DICE:', dice_f)
+    # print('Connectivity | max:', max_label, 'DICE:', dice_f)
     # list_connectivities(labels_out)
 
     # CREATE AND SHOW SURFACE

@@ -42,7 +42,7 @@ Navrh - diagram - paralelne metody, switch
 [*] Klasifikacia
   - clenenie
 Segmentacia 
- - dolpnit architekturu siete
+[*] - dolpnit architekturu siete
 - majoritne hlasovanie diagram
 - vizualizacia artefaktov
 Dice pac - hviezdicka a vysvetlenie

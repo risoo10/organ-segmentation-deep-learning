@@ -16,6 +16,7 @@ class LitsDataSet():
         self.train = None
         self.val = None
         self.test = None
+        self.liver_detected = None
 
     def load_write(self):
         self.file = tables.open_file(f'{drive_dir}/{self.filename}.h5', mode="w")
@@ -47,6 +48,7 @@ class LitsDataSet():
         data["test"] = self.test
         data["val"] = self.val
         data["cropped_slices"] = self.cropped_slices
+        data["liver_detected"] = self.liver_detected        
         pickle.dump(data, open(f'{drive_dir}/{self.filename}.p', "wb"))
 
     def load(self, mode):
@@ -62,6 +64,7 @@ class LitsDataSet():
             self.test = data['test']
             self.val = data['val']
             self.cropped_slices = data['cropped_slices']
+            self.liver_detected = data['liver_detected']
         except:
             print('Tran or Test or Val or Cropped slices not set')
 

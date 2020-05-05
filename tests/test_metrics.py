@@ -59,9 +59,9 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(round(score.item(), 2), 0.2)
 
     def test_tversky_false_posites(self):
-        loss = TverskyLoss(beta=0.3)
-        x = torch.FloatTensor([[1., 1.], [1., 0.]])
-        y = torch.FloatTensor([[0., 1.], [1., 0.]])
+        loss = TverskyLoss(beta=0.7)
+        x = torch.FloatTensor([[0., 1.], [1., 0.]])
+        y = torch.FloatTensor([[0., 1.], [1., 1.]])
         score = loss(x, y)
         self.assertEqual(round(score.item(), 2), 0.26)
 
