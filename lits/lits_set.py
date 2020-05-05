@@ -35,8 +35,13 @@ class LitsSet(Dataset):
 
         self.length = len(self.ind_map)
 
+        self.sampler_weights = None
+
     def __len__(self):
         return len(self.ind_map)
+
+    def load_sampler_weights(self):
+        return self.dset.get_weights()[self.ind_map]
 
     def __getitem__(self, i):
         ind = self.ind_map[i]

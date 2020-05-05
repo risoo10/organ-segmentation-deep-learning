@@ -80,6 +80,18 @@ class LitsDataSet():
         splits = [int(length * 0.7), int(length * 0.9)]
         return np.split(indices, splits)
 
+    def get_weights(self):
+        total = len(self.x)
+        liver_detected = self.liver_detected.astype(np.bool)
+        positive = liver_detected.sum()
+        negative = total - positive
+        pos_w = 1 / positive
+        neg_w = 1 / negative
+        weights = np.zeros(liver_detected.shape)
+        weights[liver_detected] = pos_w
+        weights[np.invert(liver_detected)] = neg_w 
+        return weights
+
     def close(self):
         self.opened = False
         self.file.close()
