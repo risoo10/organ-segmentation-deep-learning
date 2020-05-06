@@ -81,6 +81,10 @@ class LitsDataSet():
         return np.split(indices, splits)
 
     def get_weights(self):
+
+        if self.liver_detected == None:
+            return None
+
         total = len(self.x)
         liver_detected = self.liver_detected.astype(np.bool)
         positive = liver_detected.sum()

@@ -41,25 +41,29 @@ class LitsSet(Dataset):
         return len(self.ind_map)
 
     def load_sampler_weights(self):
-        return self.dset.get_weights()[self.ind_map]
+        w = self.dset.get_weights()
+        if w != None:
+            return w[self.ind_map]
+        else:
+            return None
 
     def __getitem__(self, i):
         ind = self.ind_map[i]
-        _x = self.dset.x[ind]
-        _y = self.dset.y[ind]
+        _x = self.dset.x[ind].astype(np.float32)
+        _y = self.dset.y[ind].astype(np.float32)
 
         if self.augmentation != None:
             aug = self.augmentation(image=_x, mask=_y)
             _x = aug["image"]
             _y = aug["mask"]
 
-        x = _x[np.newaxis, :].astype(np.float32)
+        x = _x[np.newaxis, :]
 
         if self.classification:
-            y = np.array(np.any(_y)).astype(np.float32)
+            y = np.array(np.any(_y))
             return self.transform(x), torch.from_numpy(y), self.empty_weight
         else:
-            y = _y[np.newaxis, :].astype(np.float32)
+            y = _y[np.newaxis, :]
 
             if self.weights:
                 weight = distance_transform_weight(_y).astype(np.float32)
