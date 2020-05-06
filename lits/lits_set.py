@@ -46,13 +46,14 @@ class LitsSet(Dataset):
     def __getitem__(self, i):
         ind = self.ind_map[i]
         _x = self.dset.x[ind]
-        x = _x[np.newaxis, :].astype(np.float32)
         _y = self.dset.y[ind]
 
         if self.augmentation != None:
             aug = self.augmentation(image=_x, mask=_y)
-            x = aug["image"][np.newaxis, :].astype(np.float32)
+            _x = aug["image"]
             _y = aug["mask"]
+
+        x = _x[np.newaxis, :].astype(np.float32)
 
         if self.classification:
             y = np.array(np.any(_y)).astype(np.float32)
