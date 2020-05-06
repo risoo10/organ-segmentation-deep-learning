@@ -60,7 +60,7 @@ class LitsSet(Dataset):
         x = _x[np.newaxis, :]
 
         if self.classification:
-            y = np.array(np.any(_y))
+            y = np.array(np.any(_y)).astype(np.float32)
             return self.transform(x), torch.from_numpy(y), self.empty_weight
         else:
             y = _y[np.newaxis, :]
