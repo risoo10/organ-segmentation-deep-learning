@@ -42,7 +42,7 @@ class LitsSet(Dataset):
 
     def load_sampler_weights(self):
         w = self.dset.get_weights()
-        if w != None:
+        if type(w) is np.ndarray:
             return w[self.ind_map]
         else:
             return None

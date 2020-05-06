@@ -19,5 +19,5 @@ resize_transform = Compose([
 
 
 augmentation = alb.Compose([
-    alb.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=5, border_mode=cv2.BORDER_CONSTANT, p=0.5),
+    alb.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=8, border_mode=cv2.BORDER_CONSTANT, p=0.5),
 ])
