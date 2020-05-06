@@ -54,8 +54,8 @@ class LitsSet(Dataset):
 
         if self.augmentation != None:
             aug = self.augmentation(image=_x, mask=_y)
-            _x = aug["image"]
-            _y = aug["mask"]
+            _x = aug["image"].astype(np.float32)
+            _y = aug["mask"].astype(np.float32)
 
         x = _x[np.newaxis, :]
 
