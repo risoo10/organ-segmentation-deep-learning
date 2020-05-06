@@ -35,7 +35,7 @@ class LitsSet(Dataset):
 
         self.length = len(self.ind_map)
 
-        self.sampler_weights = None
+        self.sampler_weights = self.load_sampler_weights()
 
     def __len__(self):
         return len(self.ind_map)
@@ -45,13 +45,13 @@ class LitsSet(Dataset):
 
     def __getitem__(self, i):
         ind = self.ind_map[i]
-        x = self.dset.x[ind]
-        x = x[np.newaxis, :].astype(np.float32)
+        _x = self.dset.x[ind]
+        x = _x[np.newaxis, :].astype(np.float32)
         _y = self.dset.y[ind]
 
         if self.augmentation != None:
-            aug = self.augmentation(image=x, mask=_y)
-            x = aug["image"]
+            aug = self.augmentation(image=_x, mask=_y)
+            x = aug["image"][np.newaxis, :].astype(np.float32)
             _y = aug["mask"]
 
         if self.classification:
