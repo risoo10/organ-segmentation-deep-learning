@@ -82,7 +82,7 @@ class LitsDataSet():
 
     def get_weights(self):
 
-        if self.liver_detected == None:
+        if type(self.liver_detected) is not np.ndarray:
             return None
 
         total = len(self.x)
