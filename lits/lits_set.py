@@ -36,7 +36,7 @@ class LitsSet(Dataset):
 
         self.length = len(self.ind_map)
 
-        if self.sampler_weights:
+        if sampler_weights:
             self.sampler_weights = self.load_sampler_weights()
 
     def __len__(self):
