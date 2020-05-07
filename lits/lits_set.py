@@ -17,6 +17,7 @@ class LitsSet(Dataset):
             classification=False,
             augmentation=None,
             plane="horizontal"
+            sampler_weights=False
         ):
         self.ind = ind
         self.dset = dset
@@ -35,7 +36,8 @@ class LitsSet(Dataset):
 
         self.length = len(self.ind_map)
 
-        self.sampler_weights = self.load_sampler_weights()
+        if self.sampler_weights:
+            self.sampler_weights = self.load_sampler_weights()
 
     def __len__(self):
         return len(self.ind_map)

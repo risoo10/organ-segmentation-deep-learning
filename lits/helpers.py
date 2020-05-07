@@ -4,10 +4,15 @@ import nibabel as nib
 import numpy as np
 
 
+def find_last_first_true(data):
+    first = np.argmax(data)
+    last = len(data) - np.argmax(np.flip(data)) - 1
+    return last, first
+
+
 def find_target_index(segmentation, verbose=False):
     organ_detected = np.array(list(map(lambda x: np.any(x), segmentation)))
-    first = np.argmax(organ_detected)
-    last = len(organ_detected) - np.argmax(np.flip(organ_detected)) - 1
+    last, first = find_last_first_true(organ_detected)
     target = int((first + last) / 2)
     print('Organ detection', first, last, target)
     if verbose:
