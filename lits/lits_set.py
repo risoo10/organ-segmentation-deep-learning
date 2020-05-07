@@ -16,7 +16,7 @@ class LitsSet(Dataset):
             transform=torch.from_numpy,
             classification=False,
             augmentation=None,
-            plane="horizontal"
+            plane="horizontal",
             sampler_weights=False
         ):
         self.ind = ind
