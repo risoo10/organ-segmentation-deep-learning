@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pydicom
 import SimpleITK as sitk
-from registration import *
+from computer_vision.registration import *
 from tqdm import tqdm
 
 
@@ -70,7 +70,8 @@ class LiverDataset():
         self.images = None
         self.labels = None
         self.z_positions = None
-        self.registration = RigidRegistration(source=None, default_pixel_value=0)
+        self.registration = RigidRegistration(
+            source=None, default_pixel_value=0)
         self.registration_source = None
 
     def set_source(self, source):
@@ -111,7 +112,6 @@ class LiverDataset():
         images = np.zeros((len(image_files), self.width, self.height))
         z_positions = np.zeros((len(image_files)))
         for index, (image_file, label_file) in enumerate(zip(image_files, label_files)):
-
             # Load and preprocess images
             ds = pydicom.dcmread(os.path.join(image_path, image_file))
             image, slice_location = self.preprocess(ds)
@@ -130,15 +130,17 @@ class LiverDataset():
             # Apply Rigid tranfromation
             print('Applying rigid registration ...')
             self.registration.fit_transform(images[int(images.shape[0] / 2)])
-            images = np.array([self.registration.transform_single(img) for img in tqdm(images)])
-            labels = np.array([self.registration.transform_single(lbl) for lbl in tqdm(labels)])
+            images = np.array([self.registration.transform_single(img)
+                               for img in tqdm(images)])
+            labels = np.array([self.registration.transform_single(lbl)
+                               for lbl in tqdm(labels)])
 
-        print(f'Finished: images {images.shape}, labels {labels.shape}, slice_coordinates min:{np.min(z_positions)}, max: {np.max(z_positions)}')
+        print(
+            f'Finished: images {images.shape}, labels {labels.shape}, slice_coordinates min:{np.min(z_positions)}, max: {np.max(z_positions)}')
         return images, labels, z_positions
 
     def load_set(self, mode):
-        print(f'Loading Pancreas dataset (ALL) ....')\
-
+        print(f'Loading Pancreas dataset (ALL) ....')
         self.LIVER_DIR = self.train_dir
         # Load and set registration SOURCE
         images, labels, slice_coordinates = self.load_by_id('16')
@@ -185,6 +187,7 @@ class LiverDataset():
 
         return patient_data
 
+
 class LiverLitsDataset():
 
     def __init__(self):
@@ -197,12 +200,12 @@ class LiverLitsDataset():
         self.images = None
         self.labels = None
         self.z_positions = None
-        self.registration = RigidRegistration(source=None, default_pixel_value=0)
+        self.registration = RigidRegistration(
+            source=None, default_pixel_value=0)
         self.registration_source = None
 
     def load_by_id(self, PATIENT_ID):
         pass
-
 
 
 def normalize_CT(dicom_data):
@@ -217,15 +220,16 @@ def normalize_CT(dicom_data):
     img += np.int16(intercept)
     img = np.array(img, dtype=np.int16)
 
-    # Set outside-of-scan pixels to 0
-    img[img < -2000] = intercept
+    return normalize(img)
 
+
+def normalize(img):
     # Clip only HU of liver and tissues
-    img = np.clip(img, -100, 300)
+    img = np.clip(img, -150, 400)
 
     # Normalize input
     copy = img
-    min_, max_ = float(np.min(copy)), float(np.max(copy))
+    min_, max_ = -150, 400
     img = (copy - min_) / (max_ - min_)
 
     return img

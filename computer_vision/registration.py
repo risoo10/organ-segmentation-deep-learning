@@ -1,9 +1,6 @@
 import SimpleITK as sitk
-from data_loader import *
-import cv2.cv2 as cv2
+from computer_vision.data_loader import *
 import matplotlib.pyplot as plt
-
-import sys
 
 
 class RigidRegistration():
@@ -31,16 +28,17 @@ class RigidRegistration():
                                                    gradientMagnitudeTolerance=1e-8)
         R.SetOptimizerScalesFromIndexShift()
 
-        tx = sitk.CenteredTransformInitializer(self.source_img, target_img, sitk.Similarity2DTransform())
+        tx = sitk.CenteredTransformInitializer(
+            self.source_img, target_img, sitk.Similarity2DTransform())
         R.SetInitialTransform(tx)
 
-        outTx = R.Execute(self.source_img, target_img)
+        out_tx = R.Execute(self.source_img, target_img)
 
         self.resampler = sitk.ResampleImageFilter()
         self.resampler.SetReferenceImage(self.source_img)
         self.resampler.SetInterpolator(sitk.sitkLinear)
         self.resampler.SetDefaultPixelValue(self.default_value)
-        self.resampler.SetTransform(outTx)
+        self.resampler.SetTransform(out_tx)
         out = self.resampler.Execute(target_img)
 
         return sitk.GetArrayFromImage(out)
